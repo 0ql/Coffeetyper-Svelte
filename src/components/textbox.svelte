@@ -107,6 +107,7 @@
         progress: 0,
         timeString: "0:00",
       });
+      manager.startEventListeners();
     }
   });
 
@@ -175,7 +176,7 @@
                   style={letterHighlighting(letterObj)}
                   class="letter {letterObj.correct ? 'correct' : ''}"
                 >
-									{#if letterObj.letter === " "}
+                  {#if letterObj.letter === " "}
                     <div class="w-2" />
                   {:else}
                     {letterObj.letter}
