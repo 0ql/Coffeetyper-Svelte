@@ -79,38 +79,28 @@ export type Settings = {
 };
 
 const template: Settings = {
-  opened: false,
-  family: "Poppins",
-  theme: {
-    opened: false,
-    active: "rgb",
-  },
+  opened: true,
   wordSet: "top 1k",
   modeName: "countdown",
-  mode: {
-    time: 30,
-    words: 30,
-  },
+  mode: { time: 60, words: 30 },
   textBox: {
-    spaceWidth: "0.5rem",
-    fontSize: "1rem",
-    width: "80%",
+    width: "65%",
     lines: "3",
     words: "100",
     letterSpacing: "0.1rem",
-    lineHeight: "3rem",
-    caret: {
-      duration: "150",
-      width: "0.2rem",
-      rounded: true,
-    },
+    lineHeight: "4rem",
+    caret: { duration: "150", width: "0.2rem", rounded: true },
     infobar: {
       liveWpm: false,
       liveLpm: false,
       liveTime: true,
-      liveAccuracy: true,
+      liveAccuracy: false,
     },
+    spaceWidth: "1.5rem",
+    fontSize: "2.6rem",
   },
+  theme: { opened: false, active: "bliss" },
+  family: "Be Vietnam Pro",
 };
 
 export const settings: Writable<Settings> = loadSettingsFormLocalStorage();

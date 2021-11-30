@@ -25,7 +25,7 @@
       transition:fade={{ duration: 400 }}
       class="text-xl p-5 fixed font-bold"
     >
-      DonkeyType
+      Donkeytype
     </div>
   {/if}
   <Textbox />
