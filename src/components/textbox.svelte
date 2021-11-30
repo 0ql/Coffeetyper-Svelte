@@ -105,6 +105,9 @@
         correctWordCount: 0,
         progress: 0,
         timeString: "0:00",
+        wpm: 0,
+        lpm: 0,
+        timePassed: 0,
       });
       manager.startEventListeners();
     }
@@ -127,10 +130,10 @@
     <div class="flex-col" style="width: {$settings.textBox.width};">
       <div
         bind:this={infobar}
-        class="flex"
+        class="flex gap-4"
         style="padding-left: {$settings.textBox.caret.width}"
       >
-        <div class="mr-4">
+        <div>
           {$settings.textBox.infobar.liveTime ? $runState.timeString : ""}
         </div>
         <div>
@@ -138,6 +141,16 @@
             ? Math.round($runState.accuracy * 100) + "%"
             : ""}
         </div>
+				{#if $settings.textBox.infobar.liveWpm}
+					<div class="flex items-end">
+						{$runState.wpm}<span class="text-xs mb-1">WPM</span>
+					</div>
+				{/if}
+        {#if $settings.textBox.infobar.liveLpm}
+          <div class="flex items-end">
+            {$runState.lpm}<span class="text-xs mb-1">LPM</span>
+          </div>
+        {/if}
       </div>
       <div
         bind:this={$box}

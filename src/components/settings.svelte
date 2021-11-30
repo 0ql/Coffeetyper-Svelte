@@ -1,7 +1,6 @@
 <script lang="ts">
   import { fade, fly } from "svelte/transition";
   import { settings } from "../store";
-  import type { Font } from "../font";
   import Input from "./ui/input.svelte";
   import Select from "./ui/select.svelte";
   import Checkbox from "./ui/checkbox.svelte";
@@ -9,7 +8,7 @@
   import { getFromLocalStorage, saveToLocalStorage } from "../util";
   import { get } from "svelte/store";
 
-  let fonts: Font[];
+  let fonts: any[];
 
   (async () => {
     const res = await fetch(
@@ -20,8 +19,8 @@
 
   const changeFont = () => {
     fonts.filter((font) => {
-      if (font.family === $settings.font.family) {
-        $settings.font = font;
+      if (font.family === $settings.family) {
+        $settings.family = font.family;
       }
     });
   };
@@ -57,6 +56,14 @@
     delete s[name];
     saveToLocalStorage("savedSettings", s);
   };
+
+  const exportSettings = (name: string) => {
+    const s = getFromLocalStorage("savedSettings")[name];
+    const data = JSON.stringify(s);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    window.open(url);
+  };
 </script>
 
 {#if $settings.opened}
@@ -68,11 +75,7 @@
     <div class="pl-5 py-5" style="direction: ltr;" transition:fly={{ x: -100 }}>
       <div class="text-primary font-bold text-xl">Settings</div>
       <div class="mt-5">Font Family</div>
-      <Select
-        class="mt-3"
-        bind:value={$settings.font.family}
-        on:change={changeFont}
-      >
+      <Select class="mt-3" bind:value={$settings.family} on:change={changeFont}>
         {#if fonts}
           {#each fonts as font}
             <option value={font.family}>{font.family}</option>
@@ -157,6 +160,30 @@
         </div>
       </div>
 
+      <div class="mt-5">Infobar</div>
+      <div class="flex gap-3">
+        <div>
+          <div class="flex gap-2 mt-2">
+            <Checkbox bind:checked={$settings.textBox.infobar.liveAccuracy} />
+            <div class="text-xs">Live Accuracy</div>
+          </div>
+          <div class="flex gap-2 mt-2">
+            <Checkbox bind:checked={$settings.textBox.infobar.liveLpm} />
+            <div class="text-xs">Live LPM</div>
+          </div>
+        </div>
+        <div>
+          <div class="flex gap-2 mt-2">
+            <Checkbox bind:checked={$settings.textBox.infobar.liveWpm} />
+            <div class="text-xs">Live WPM</div>
+          </div>
+          <div class="flex gap-2 mt-2">
+            <Checkbox bind:checked={$settings.textBox.infobar.liveTime} />
+            <div class="text-xs">Live Time</div>
+          </div>
+        </div>
+      </div>
+
       <div class="mt-5">Wordset</div>
       <Select class="mt-3" bind:value={$settings.wordSet}>
         <option value="top 1k">Top 1k words english</option>
@@ -186,6 +213,7 @@
         />
         <Button on:click={saveSettings}>Save</Button>
       </div>
+
       <div class="mt-5">Saved Settings</div>
       <div>
         {#each Object.keys(getSavedSettings()) as name}
@@ -193,6 +221,7 @@
           <div class="flex mt-3 gap-4">
             <Button on:click={() => changeSettings(name)}>Load</Button>
             <Button on:click={() => deleteSetting(name)}>Delete</Button>
+            <Button on:click={() => exportSettings(name)}>Export</Button>
           </div>
         {/each}
       </div>

@@ -1,4 +1,4 @@
-import { box, cursor, runState } from "../store";
+import { box, cursor, runState, settings } from "../store";
 import { get, writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { Modes } from "../store";
@@ -9,8 +9,10 @@ export class Timer {
   private interval: any;
   public timeString: string;
   public running: boolean;
+  public passed: number;
 
   constructor() {
+    this.passed = 0;
     this.progress = 0;
     this.timeString = "0:00";
     this.running = false;
@@ -23,11 +25,13 @@ export class Timer {
     runState.update((state) => {
       state.timeString = formatTime(this.progress);
       state.progress = this.progress;
+      state.timePassed = this.passed;
       return state;
     });
 
     this.interval = setInterval(() => {
       if (this.running) {
+        this.passed++;
         mode === "countdown" ? this.progress-- : null;
         mode === "countup" ? this.progress++ : null;
         mode === "timed" ? this.progress++ : null;
@@ -47,6 +51,9 @@ export class Timer {
         runState.update((state) => {
           state.timeString = formatTime(this.progress);
           state.progress = this.progress;
+          state.timePassed = this.passed;
+          state.wpm = Math.round((state.correctWordCount / this.passed) * 60);
+          state.lpm = Math.round((state.correctLetterCount / this.passed) * 60);
           return state;
         });
       }
@@ -61,6 +68,7 @@ export class Timer {
     this.running = false;
     clearInterval(this.interval);
     this.progress = 0;
+    this.passed = 0;
   }
 }
 

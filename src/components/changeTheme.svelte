@@ -1,7 +1,13 @@
 <script lang="ts">
-  import { loadTheme } from "../theme";
+  import { getThemeList, loadTheme } from "../theme";
   import { fade, fly } from "svelte/transition";
   import { settings } from "../store";
+
+  let list: any[] = [];
+
+  (async () => {
+    list = await getThemeList();
+  })();
 
   const changeTheme = (name: string) => {
     loadTheme(name);
@@ -16,7 +22,7 @@
   >
     <div class="pr-5" transition:fly={{ x: 100, duration: 400 }}>
       <div class="py-5 font-bold text-xl">Theme</div>
-      {#each $settings.theme.themeList as th}
+      {#each list as th}
         <div
           on:click={() => changeTheme(th.name)}
           class="m-2 rounded-lg p-2 cursor-pointer duration-150 transform hover:translate-x-[-0.5rem]"

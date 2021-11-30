@@ -4,7 +4,6 @@
   import Settings from "./components/settings.svelte";
   import Textbox from "./components/textbox.svelte";
   import { settings } from "./store";
-  import { getThemeList } from "./theme";
 
   const mouseMoved = (e: MouseEvent) => {
     if (e.x < window.innerWidth / 3) {
@@ -16,14 +15,6 @@
       $settings.theme.opened = false;
     }
   };
-
-  (async () => {
-    try {
-      $settings.theme.themeList = await getThemeList();
-    } catch (err) {
-      console.error("Failed to load theme list: ", err);
-    }
-  })();
 </script>
 
 <main class="h-full text-secondary" on:mousemove={mouseMoved}>

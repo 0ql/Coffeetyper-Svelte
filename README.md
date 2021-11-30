@@ -35,7 +35,7 @@ To switch the theme move your mouse to the right of the screen.
 ![](https://i.imgur.com/db2T4DA.png)
 
 ![](https://i.imgur.com/az53ftv.png)
-
+	
 ![](https://i.imgur.com/JvtXpVq.png)
 
 ### Stack

@@ -1,9 +1,8 @@
 import { get, writable } from "svelte/store";
 import { loadFont } from "./font";
 import { loadTheme } from "./theme";
-import type { Font } from "./font";
 import type { Writable } from "svelte/store";
-import type { themeList } from "./theme";
+import { getFromLocalStorage, saveToLocalStorage } from "./util";
 
 const fixBwithA = <T>(a: T, b: T): T => {
   for (const key of Object.keys(a !== null ? a : {})) {
@@ -28,6 +27,13 @@ const loadSettingsFormLocalStorage = (): Writable<Settings> => {
 
 const fixStorage = () => {
   localStorage.removeItem("theme");
+  let s: { [key: string]: Settings } = getFromLocalStorage("savedSettings");
+  for (let key in s) {
+    if (s[key].theme["themeList"]) {
+      delete s[key].theme["themeList"];
+    }
+  }
+  saveToLocalStorage("savedSettings", s);
 };
 
 export type Modes = "timed" | "countdown" | "countup";
@@ -35,12 +41,11 @@ export type Modes = "timed" | "countdown" | "countup";
 export type Theme = {
   opened: boolean;
   active: string;
-  themeList: themeList;
 };
 
 export type Settings = {
   opened: boolean;
-  font: Font;
+  family: string;
   wordSet: string;
   modeName: Modes;
   mode: {
@@ -72,23 +77,10 @@ export type Settings = {
 
 const template: Settings = {
   opened: false,
-  font: {
-    family: "Poppins",
-    variants: ["regular"],
-    subsets: ["devanagari", "latin", "latin-ext"],
-    version: "v15",
-    lastModified: "2020-11-06",
-    files: {
-      regular:
-        "http://fonts.gstatic.com/s/poppins/v15/pxiEyp8kv8JHgFVrFJDUc1NECPY.ttf",
-    },
-    category: "sans-serif",
-    kind: "webfonts#webfont",
-  },
+  family: "Poppins",
   theme: {
     opened: false,
     active: "rgb",
-    themeList: null,
   },
   wordSet: "top 1k",
   modeName: "countdown",
@@ -127,11 +119,11 @@ let recentFont: string = "",
 
 settings.subscribe((s) => {
   if (Date.now() - wait > 500) {
-    if (s.font && recentFont !== s.font.family) {
-      console.log("Loading font:", s.font.family);
-      loadFont(s.font.family);
-      document.body.style.fontFamily = s.font.family;
-      recentFont = s.font.family;
+    if (s && recentFont !== s.family) {
+      console.log("Loading font:", s.family);
+      loadFont(s.family);
+      document.body.style.fontFamily = s.family;
+      recentFont = s.family;
     }
 
     if (s.theme.active !== recentTheme) {
@@ -161,12 +153,18 @@ export const runState: Writable<{
   correctWordCount: number;
   progress: number;
   timeString: string;
+  wpm: number;
+  lpm: number;
+  timePassed: number;
 }> = writable({
   accuracy: 0,
   correctLetterCount: 0,
   correctWordCount: 0,
   progress: 0,
   timeString: "0:00",
+  wpm: 0,
+  lpm: 0,
+  timePassed: 0,
 });
 
 export const cursor: Writable<HTMLDivElement> = writable(null);
