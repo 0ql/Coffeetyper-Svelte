@@ -4,7 +4,9 @@ export type themeList = {
   textColor: string;
 }[];
 
-export const loadTheme = async (resource: string) => {
+export const loadTheme = (resource: string) => {
+  console.log("Loading Theme:", resource);
+
   let link = document.createElement("link");
   link.href = "/themes/" + resource + ".css";
   link.type = "text/css";

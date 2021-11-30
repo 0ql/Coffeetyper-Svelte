@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte/internal";
-  import { writable, Writable } from "svelte/store";
   import { crossfade } from "svelte/transition";
-  import { runState, settings, theme } from "../store";
+  import { box, cursor, runState, settings } from "../store";
   import { Timer, letterHighlighting, textArray, RunManager } from "./textbox";
   import { createText } from "./words";
   import { get } from "svelte/store";
@@ -14,8 +13,6 @@
 
   let clientHeight = 0;
   let infobar: HTMLDivElement;
-  let box: HTMLDivElement;
-  let cursor: Writable<HTMLDivElement> = writable(null);
   let stats: boolean = false;
   let manager: RunManager;
   const results: {
@@ -89,6 +86,7 @@
   };
 
   const onRunEnded = () => {
+    manager.removeEventListeners();
     timer.pause();
     displayStats();
     timer.reset();
@@ -96,6 +94,7 @@
 
   document.addEventListener("keydown", async (e) => {
     if (e.key === "R") {
+      manager.removeEventListeners();
       stats = false;
       await newText();
       timer.reset();
@@ -113,7 +112,7 @@
 
   onMount(async () => {
     newText();
-    manager = new RunManager(infobar, box, cursor, onRunStarted, onRunEnded);
+    manager = new RunManager(infobar, onRunStarted, onRunEnded);
     manager.startEventListeners();
   });
 </script>
@@ -121,11 +120,11 @@
 {#if stats === false}
   <div
     class="h-full w-full flex items-center justify-center absolute text-2xl transition-opacity duration-400 {$settings.opened ||
-    $theme.opened
+    $settings.theme.opened
       ? ' opacity-30'
       : ''}"
   >
-    <div class="w-[var(--text-box-width)] flex-col">
+    <div class="flex-col" style="width: {$settings.textBox.width};">
       <div
         bind:this={infobar}
         class="flex"
@@ -141,11 +140,12 @@
         </div>
       </div>
       <div
-        bind:this={box}
-        class="overflow-y-hidden w-full z-1"
+        bind:this={$box}
+        class="overflow-hidden w-full z-1"
         style="height: {clientHeight
           ? clientHeight * parseInt($settings.textBox.lines)
-          : 0}px; padding-left: {$settings.textBox.caret.width}"
+          : 0}px; padding-left: {$settings.textBox.caret
+          .width}; font-size: {$settings.textBox.fontSize};"
       >
         <div
           class="inline-flex flex-wrap letter"
@@ -177,7 +177,7 @@
                   class="letter {letterObj.correct ? 'correct' : ''}"
                 >
                   {#if letterObj.letter === " "}
-                    <div class="w-2" />
+                    <div style="width: {$settings.textBox.spaceWidth};" />
                   {:else}
                     {letterObj.letter}
                   {/if}
@@ -192,11 +192,11 @@
 {:else}
   <div
     class="w-full h-full flex items-center justify-center transition-opacity duration-400 {$settings.opened ||
-    $theme.opened
+    $settings.theme.opened
       ? ' opacity-30'
       : ''}"
   >
-    <div class="w-[var(--text-box-width)]">
+    <div style="width: {$settings.textBox.width};">
       <div class="flex gap-5">
         <div>
           <div class="text-5xl font-bold">{results.wpm}</div>

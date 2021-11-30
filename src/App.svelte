@@ -3,23 +3,23 @@
   import ChangeTheme from "./components/changeTheme.svelte";
   import Settings from "./components/settings.svelte";
   import Textbox from "./components/textbox.svelte";
-  import { settings, theme } from "./store";
+  import { settings } from "./store";
   import { getThemeList } from "./theme";
 
   const mouseMoved = (e: MouseEvent) => {
     if (e.x < window.innerWidth / 3) {
       $settings.opened = true;
     } else if (e.x > window.innerWidth - window.innerWidth / 4) {
-      $theme.opened = true;
+      $settings.theme.opened = true;
     } else {
       $settings.opened = false;
-      $theme.opened = false;
+      $settings.theme.opened = false;
     }
   };
 
   (async () => {
     try {
-      $theme.themeList = await getThemeList();
+      $settings.theme.themeList = await getThemeList();
     } catch (err) {
       console.error("Failed to load theme list: ", err);
     }

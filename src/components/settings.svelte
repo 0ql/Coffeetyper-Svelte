@@ -5,6 +5,9 @@
   import Input from "./ui/input.svelte";
   import Select from "./ui/select.svelte";
   import Checkbox from "./ui/checkbox.svelte";
+  import Button from "./ui/button.svelte";
+  import { getFromLocalStorage, saveToLocalStorage } from "../util";
+  import { get } from "svelte/store";
 
   let fonts: Font[];
 
@@ -22,13 +25,49 @@
       }
     });
   };
+
+  let newName: string = "";
+  const saveSettings = () => {
+    if (newName.length < 1) {
+      alert("Please enter a name");
+      return;
+    }
+
+    let s = getFromLocalStorage("savedSettings");
+    if (s === null) s = {};
+
+    s[newName] = get(settings);
+    saveToLocalStorage("savedSettings", s);
+  };
+
+  const getSavedSettings = () => {
+    let s = getFromLocalStorage("savedSettings");
+    if (s === null) s = {};
+
+    return s;
+  };
+
+  const changeSettings = (name: string) => {
+    $settings = getFromLocalStorage("savedSettings")[name];
+  };
+
+  const deleteSetting = (name: string) => {
+    let s = getFromLocalStorage("savedSettings");
+    console.log(s);
+    delete s[name];
+    saveToLocalStorage("savedSettings", s);
+  };
 </script>
 
 {#if $settings.opened}
-  <div transition:fade={{ duration: 400 }} class="fixed h-full z-2">
-    <div class="pl-5" transition:fly={{ x: -100 }}>
-      <div class="text-primary py-5 font-bold text-xl">Settings</div>
-      <div>Font Family</div>
+  <div
+    transition:fade={{ duration: 400 }}
+    style="direction: rtl;"
+    class="fixed h-full z-2 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-current scrollbar-thumb-rounded scrollbar-track-transparent"
+  >
+    <div class="pl-5 py-5" style="direction: ltr;" transition:fly={{ x: -100 }}>
+      <div class="text-primary font-bold text-xl">Settings</div>
+      <div class="mt-5">Font Family</div>
       <Select
         class="mt-3"
         bind:value={$settings.font.family}
@@ -79,6 +118,22 @@
           />
         </div>
       </div>
+      <div class="flex gap-3 mt-2">
+        <div>
+          <div class="text-xs">Font Size</div>
+          <Input
+            class="mt-2 w-20 text-center"
+            bind:value={$settings.textBox.fontSize}
+          />
+        </div>
+        <div>
+          <div class="text-xs">Space Width</div>
+          <Input
+            class="mt-2 w-20 text-center"
+            bind:value={$settings.textBox.spaceWidth}
+          />
+        </div>
+      </div>
 
       <div class="mt-5">Caret</div>
       <div class="flex gap-2 mt-2">
@@ -120,6 +175,26 @@
           <div class="mt-5">Time</div>
           <Input class="mt-3 w-30" bind:value={$settings.mode.time} />
         </div>
+      </div>
+      <div class="mt-5">Save Settings</div>
+      <div class="mt-3 text-xs">Name</div>
+      <div>
+        <Input
+          placeholder={$settings.theme.active}
+          class="mt-3 mr-3"
+          bind:value={newName}
+        />
+        <Button on:click={saveSettings}>Save</Button>
+      </div>
+      <div class="mt-5">Saved Settings</div>
+      <div>
+        {#each Object.keys(getSavedSettings()) as name}
+          <div class="text-xs mt-3">{name}</div>
+          <div class="flex mt-3 gap-4">
+            <Button on:click={() => changeSettings(name)}>Load</Button>
+            <Button on:click={() => deleteSetting(name)}>Delete</Button>
+          </div>
+        {/each}
       </div>
     </div>
   </div>

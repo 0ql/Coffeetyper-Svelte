@@ -18,17 +18,25 @@ Donkeytype is a [Monkeytype](https://monkeytype.com) clone that was originally a
 
 - Settings get saved to local storage
 
-- All settings apply in realtime; no need to reload
+- Save and switch between instances of your Settings in realtime
+
+- All settings apply in realtime; no need to reload (with very few exceptions)
 
 ### Usage
 
 To open the Settings move your mouse to the left of the screen.
 
-![](https://i.imgur.com/KgjvoDr.png) 
+![](https://i.imgur.com/PpnKinI.png) 
 
 To switch the theme move your mouse to the right of the screen.
 
-![](https://i.imgur.com/Dr9CN1w.png)
+![](https://i.imgur.com/CVHuT6F.png)
+
+![](https://i.imgur.com/db2T4DA.png)
+
+![](https://i.imgur.com/az53ftv.png)
+
+![](https://i.imgur.com/JvtXpVq.png)
 
 ### Stack
 

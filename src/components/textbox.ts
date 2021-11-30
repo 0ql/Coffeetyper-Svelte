@@ -1,4 +1,4 @@
-import { runState } from "../store";
+import { box, cursor, runState } from "../store";
 import { get, writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { Modes } from "../store";
@@ -91,9 +91,7 @@ type TextArr = {
 export const textArray: Writable<TextArr> = writable([]);
 
 export class RunManager {
-  cursor: Writable<HTMLDivElement>;
   infobar: HTMLDivElement;
-  box: HTMLDivElement;
   interval: NodeJS.Timer;
   currentLetter: number;
   currentWord: number;
@@ -104,15 +102,11 @@ export class RunManager {
 
   constructor(
     infobar: HTMLDivElement,
-    box: HTMLDivElement,
-    cursor: Writable<HTMLDivElement>,
     userInput: () => void,
     onRunEnded: () => void
   ) {
     this.userInput = userInput;
-    this.cursor = cursor;
     this.infobar = infobar;
-    this.box = box;
     this.currentLetter = 0;
     this.currentWord = 0;
     this.currentWordLetter = 0;
@@ -121,16 +115,17 @@ export class RunManager {
   }
 
   private onInterval = () => {
-    const c = get(this.cursor);
+    const c = get(cursor);
     if (c) {
+      const b = get(box);
       let innerHeight = window.innerHeight + this.infobar.clientHeight;
       if (getOffset(c).top > innerHeight / 2) {
-        this.box.scrollBy({
+        b.scrollBy({
           top: c.clientHeight,
           behavior: "smooth",
         });
       } else if (getOffset(c).top < innerHeight / 2 - c.clientHeight * 2) {
-        this.box.scrollBy({
+        b.scrollBy({
           top: -c.clientHeight,
           behavior: "smooth",
         });
