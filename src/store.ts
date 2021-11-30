@@ -29,6 +29,9 @@ const fixStorage = () => {
   localStorage.removeItem("theme");
   let s: { [key: string]: Settings } = getFromLocalStorage("savedSettings");
   for (let key in s) {
+    if (s[key]["font"]) {
+      delete s[key]["font"];
+    }
     if (s[key].theme["themeList"]) {
       delete s[key].theme["themeList"];
     }
