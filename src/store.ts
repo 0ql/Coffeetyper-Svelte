@@ -4,7 +4,7 @@ import { loadTheme } from "./theme";
 import type { Writable } from "svelte/store";
 import { getFromLocalStorage, saveToLocalStorage } from "./util";
 
-const fixBwithA = <T>(a: T, b: T): T => {
+export const fixBwithA = <T>(a: T, b: T): T => {
   for (const key of Object.keys(a !== null ? a : {})) {
     if (key in b === false) b[key] = a[key];
     if (typeof a[key] === "object") fixBwithA(a[key], b[key]);

@@ -2,7 +2,7 @@
 
 ### What is Donkeytype?
 
-Donkeytype is a [Monkeytype](https://monkeytype.com) clone that was originally a personal project of mine to test out [Vite](https://vitejs.dev) and [Windicss](https://windicss.org) and now turned into a half decent typing test. 
+Donkeytype is a [Monkeytype](https://monkeytype.com) clone that was originally a personal project of mine to test out [Vite](https://vitejs.dev) and [Windicss](https://windicss.org) and now turned into a decent typing test. 
 
 ### Features
 
@@ -20,7 +20,9 @@ Donkeytype is a [Monkeytype](https://monkeytype.com) clone that was originally a
 
 - Save and switch between instances of your Settings in realtime
 
-- All settings apply in realtime; no need to reload (with very few exceptions)
+- Export and import Settings or Cosmetics
+
+- All settings apply in realtime; no need to reload
 
 ### Usage
 

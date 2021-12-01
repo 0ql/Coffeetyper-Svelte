@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade, fly } from "svelte/transition";
-  import { settings } from "../store";
+  import { fixBwithA, settings } from "../store";
+  import type { Settings } from "../store";
   import Input from "./ui/input.svelte";
   import Select from "./ui/select.svelte";
   import Checkbox from "./ui/checkbox.svelte";
@@ -57,12 +58,35 @@
     saveToLocalStorage("savedSettings", s);
   };
 
-  const exportSettings = (name: string) => {
-    const s = getFromLocalStorage("savedSettings")[name];
+  const exportRaw = (name: string) => {
+    const s: Settings = getFromLocalStorage("savedSettings")[name];
     const data = JSON.stringify(s);
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     window.open(url);
+  };
+
+  const exportCosmetics = (name: string) => {
+    const s: Settings = getFromLocalStorage("savedSettings")[name];
+    // remove irrelevant settings
+    delete s.mode;
+    delete s.modeName;
+    delete s.opened;
+    delete s.wordSet;
+    delete s.textBox.infobar;
+    delete s.theme.opened;
+
+    const data = JSON.stringify(s);
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    window.open(url);
+  };
+
+  let imported = "";
+
+  const importSettings = () => {
+    const data = JSON.parse(imported);
+    $settings = fixBwithA($settings, data);
   };
 </script>
 
@@ -214,14 +238,36 @@
         <Button on:click={saveSettings}>Save</Button>
       </div>
 
+      <div class="mt-5">Import Settings</div>
+      <div class="mt-3 text-xs">Paste</div>
+      <div>
+        <Input
+          placeholder="Paste settings here"
+          class="mt-3 mr-3"
+          bind:value={imported}
+        />
+        <Button on:click={importSettings}>Load</Button>
+      </div>
+
       <div class="mt-5">Saved Settings</div>
       <div>
         {#each Object.keys(getSavedSettings()) as name}
-          <div class="text-xs mt-3">{name}</div>
-          <div class="flex mt-3 gap-4">
-            <Button on:click={() => changeSettings(name)}>Load</Button>
-            <Button on:click={() => deleteSetting(name)}>Delete</Button>
-            <Button on:click={() => exportSettings(name)}>Export</Button>
+          <div class="flex gap-4 mt-3">
+            <div>
+              <div class="text-sm">{name}</div>
+              <div class="flex mt-3 gap-4">
+                <Button on:click={() => changeSettings(name)}>Load</Button>
+                <Button on:click={() => deleteSetting(name)}>Delete</Button>
+              </div>
+            </div>
+            <div>
+              <div class="text-xs mt-1">Export</div>
+              <div class="flex mt-3 gap-4">
+                <Button on:click={() => exportRaw(name)}>Full</Button>
+                <Button on:click={() => exportCosmetics(name)}>Cosmetics</Button
+                >
+              </div>
+            </div>
           </div>
         {/each}
       </div>
