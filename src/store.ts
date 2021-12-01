@@ -79,7 +79,7 @@ export type Settings = {
 };
 
 const template: Settings = {
-  opened: true,
+  opened: false,
   wordSet: "top 1k",
   modeName: "countdown",
   mode: { time: 60, words: 30 },

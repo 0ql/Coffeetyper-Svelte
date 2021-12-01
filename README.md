@@ -2,7 +2,7 @@
 
 ### What is Donkeytype?
 
-Donkeytype is a [Monkeytype](https://monkeytype.com) clone that was originally a personal project of mine to test out [Vite](https://vitejs.dev) and [Windicss](https://windicss.org) and now turned into a decent typing test. 
+[Donkeytype](https://donkeytype.com) is a [Monkeytype](https://monkeytype.com) clone that was originally a personal project of mine to test out [Vite](https://vitejs.dev) and [Windicss](https://windicss.org) and now turned into a decent typing test. 
 
 ### Features
 

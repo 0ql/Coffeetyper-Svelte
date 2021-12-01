@@ -97,7 +97,16 @@
     class="fixed h-full z-2 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-current scrollbar-thumb-rounded scrollbar-track-transparent"
   >
     <div class="pl-5 py-5" style="direction: ltr;" transition:fly={{ x: -100 }}>
-      <div class="text-primary font-bold text-xl">Settings</div>
+      <div class="flex gap-6">
+        <div class="text-primary font-bold text-xl">Settings</div>
+        <div
+          class="text-xs mt-2 cursor-pointer"
+          on:click={() =>
+            window.open("https://github.com/0ql/Donkeytype", "_blank")}
+        >
+          Github
+        </div>
+      </div>
       <div class="mt-5">Font Family</div>
       <Select class="mt-3" bind:value={$settings.family} on:change={changeFont}>
         {#if fonts}
