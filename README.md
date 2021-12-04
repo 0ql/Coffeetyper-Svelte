@@ -15,7 +15,7 @@
   - Realtime Theme switching
 
 	- Add a background image
-  
+
   - Pick between ALL fonts awailable on [Google Fonts](https://fonts.google.com)
 
 - Settings get saved to local storage
