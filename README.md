@@ -13,9 +13,9 @@
   - Customize all aspects of the Textbox like width, letter spacing, line height, caret width...
   
   - Realtime Theme switching
-
-	- Add a background image
-
+  
+  - Add a background image
+  
   - Pick between ALL fonts awailable on [Google Fonts](https://fonts.google.com)
 
 - Settings get saved to local storage
@@ -39,7 +39,7 @@ To switch the theme move your mouse to the right of the screen.
 ![](https://i.imgur.com/db2T4DA.png)
 
 ![](https://i.imgur.com/az53ftv.png)
-	
+
 ![](https://i.imgur.com/JvtXpVq.png)
 
 ### Stack
