@@ -72,9 +72,8 @@
   const exportRaw = (name: string) => {
     const s: Settings = getFromLocalStorage("savedSettings")[name];
     const data = JSON.stringify(s);
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    window.open(url);
+
+		navigator.clipboard.writeText(data)
   };
 
   const exportCosmetics = (name: string) => {
@@ -82,9 +81,7 @@
       getFromLocalStorage("savedSettings")[name]
     );
     const data = JSON.stringify(s);
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    window.open(url);
+		navigator.clipboard.writeText(data)
   };
 
   let imported = "";
@@ -153,7 +150,7 @@
         <div>
           <div class="text-xs">Words</div>
           <Input
-            class="mt-2 w-10 text-center"
+            class="mt-2 w-15 text-center"
             bind:value={$settings.textBox.words}
           />
         </div>
@@ -183,9 +180,15 @@
       </div>
 
       <div class="mt-5">Caret</div>
-      <div class="flex gap-2 mt-2">
-        <Checkbox bind:checked={$settings.textBox.caret.rounded} />
-        <div class="text-xs">Rounded</div>
+      <div class="flex gap-4 mt-2">
+        <div class="flex gap-2">
+          <Checkbox bind:checked={$settings.textBox.caret.rounded} />
+          <div class="text-xs">Rounded</div>
+        </div>
+        <div class="flex gap-2">
+          <Checkbox bind:checked={$settings.textBox.caret.colored} />
+          <div class="text-xs">Colored</div>
+        </div>
       </div>
       <div class="flex gap-4 mt-2">
         <div>
@@ -233,18 +236,21 @@
         <option value="top 1k">Top 1k words english</option>
       </Select>
 
-      <div class="flex gap-3">
+      <div class="flex gap-4 mt-5">
         <div>
-          <div class="mt-5">Mode</div>
-          <Select class="mt-3" bind:value={$settings.modeName}>
+          <div>Mode</div>
+          <Select class="mt-3 h-10 w-43" bind:value={$settings.modeName}>
             <option value="timed">Timed</option>
             <option value="countdown">Countdown</option>
             <option value="countup">Countup</option>
           </Select>
         </div>
         <div>
-          <div class="mt-5">Time</div>
-          <Input class="mt-3 w-30" bind:value={$settings.mode.time} />
+          <div>Time in sec</div>
+          <Input
+            class="mt-3 h-10 text-center w-20"
+            bind:value={$settings.mode.time}
+          />
         </div>
       </div>
 
@@ -269,13 +275,9 @@
 
       <div class="mt-5">Save Settings</div>
       <div class="mt-3 text-xs">Name</div>
-      <div>
-        <Input
-          placeholder={$settings.theme.active}
-          class="mt-3 mr-3"
-          bind:value={newName}
-        />
-        <Button on:click={saveSettings}>Save</Button>
+      <div class="flex gap-4 mt-3">
+        <Input placeholder={$settings.theme.active} bind:value={newName} />
+        <Button class="w-15" on:click={saveSettings}>Save</Button>
       </div>
 
       <div class="mt-5">Import Settings</div>
@@ -286,7 +288,7 @@
           class="mt-3 mr-3"
           bind:value={imported}
         />
-        <Button on:click={importSettings}>Load</Button>
+        <Button class="w-15" on:click={importSettings}>Load</Button>
       </div>
 
       <div class="mt-5">Saved Settings</div>
@@ -303,7 +305,7 @@
               </div>
             </div>
             <div>
-              <div class="text-xs">Export</div>
+              <div class="text-xs">Copy to clipboard</div>
               <div class="flex mt-1 gap-3">
                 <Button on:click={() => exportRaw(name)}>Full</Button>
                 <Button on:click={() => exportCosmetics(name)}>Cosmetics</Button

@@ -68,6 +68,7 @@ export type Settings = {
       duration: string;
       width: string;
       rounded: boolean;
+      colored: boolean;
     };
     infobar: {
       liveWpm: boolean;
@@ -93,7 +94,7 @@ export const template: Settings = {
     words: "100",
     letterSpacing: "0.1rem",
     lineHeight: "4rem",
-    caret: { duration: "150", width: "0.2rem", rounded: true },
+    caret: { duration: "150", width: "0.2rem", rounded: true, colored: true },
     infobar: {
       liveWpm: false,
       liveLpm: false,

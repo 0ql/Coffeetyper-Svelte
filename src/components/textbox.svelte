@@ -177,11 +177,14 @@
                     bind:this={$cursor}
                     style="width: {$settings.textBox.caret
                       .width}; margin-right: -{$settings.textBox.caret
-                      .width}; transform: translateX(-{$settings.textBox.caret
-                      .width})"
+                      .width};ttransform: translateX(-{$settings.textBox.caret
+                      .width}); background-color: {$settings.textBox.caret
+                      .colored
+                      ? 'var(--caret-color)'
+                      : ''};"
                     class="bg-white {$settings.textBox.caret.rounded
                       ? 'rounded-full'
-                      : ''}"
+                      : ''} "
                   />
                 {/if}
                 <!-- Letter -->

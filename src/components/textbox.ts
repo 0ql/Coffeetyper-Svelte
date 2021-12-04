@@ -1,4 +1,4 @@
-import { box, cursor, runState } from "../store";
+import { box, cursor, runState, settings } from "../store";
 import { get, writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { Modes } from "../store";
@@ -182,6 +182,7 @@ export class RunManager {
   }
 
   private handleKeyDown = (e: KeyboardEvent) => {
+    if (get(settings).opened) return;
     const ta = get(textArray);
     if (e.key === "R") return;
     if (this.ended) return;
