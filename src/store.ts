@@ -76,9 +76,13 @@ export type Settings = {
       liveAccuracy: boolean;
     };
   };
+  background: {
+    bgImg: string;
+    opacity: string;
+  };
 };
 
-const template: Settings = {
+export const template: Settings = {
   opened: false,
   wordSet: "top 1k",
   modeName: "countdown",
@@ -101,6 +105,10 @@ const template: Settings = {
   },
   theme: { opened: false, active: "bliss" },
   family: "Be Vietnam Pro",
+  background: {
+    bgImg: "",
+    opacity: "1",
+  },
 };
 
 export const settings: Writable<Settings> = loadSettingsFormLocalStorage();

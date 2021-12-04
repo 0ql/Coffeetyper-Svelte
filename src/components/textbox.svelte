@@ -86,7 +86,7 @@
   };
 
   const onRunEnded = () => {
-    manager.removeEventListeners();
+    manager.removeEventListener();
     timer.pause();
     displayStats();
     timer.reset();
@@ -94,7 +94,7 @@
 
   document.addEventListener("keydown", async (e) => {
     if (e.key === "R") {
-      manager.removeEventListeners();
+      manager.removeEventListener();
       stats = false;
       await newText();
       timer.reset();
@@ -109,14 +109,14 @@
         lpm: 0,
         timePassed: 0,
       });
-      manager.startEventListeners();
+      manager.startEventListener();
     }
   });
 
   onMount(async () => {
     newText();
     manager = new RunManager(infobar, onRunStarted, onRunEnded);
-    manager.startEventListeners();
+    manager.startEventListener();
   });
 </script>
 
@@ -141,11 +141,11 @@
             ? Math.round($runState.accuracy * 100) + "%"
             : ""}
         </div>
-				{#if $settings.textBox.infobar.liveWpm}
-					<div class="flex items-end">
-						{$runState.wpm}<span class="text-xs mb-1">WPM</span>
-					</div>
-				{/if}
+        {#if $settings.textBox.infobar.liveWpm}
+          <div class="flex items-end">
+            {$runState.wpm}<span class="text-xs mb-1">WPM</span>
+          </div>
+        {/if}
         {#if $settings.textBox.infobar.liveLpm}
           <div class="flex items-end">
             {$runState.lpm}<span class="text-xs mb-1">LPM</span>

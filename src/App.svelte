@@ -17,18 +17,28 @@
   };
 </script>
 
-<main class="h-full text-secondary" on:mousemove={mouseMoved}>
-  <Settings />
-  <ChangeTheme />
-  {#if !$settings.opened}
-    <div
-      transition:fade={{ duration: 400 }}
-      class="text-xl p-5 fixed font-bold"
-    >
-      Donkeytype
-    </div>
-  {/if}
-  <Textbox />
+<main
+  class="h-full text-secondary"
+  on:mousemove={mouseMoved}
+  style="background-image: url({$settings.background
+    .bgImg}); background: center center no-repeat; background-size: cover;"
+>
+  <div
+    class="main w-full h-full"
+    style="opacity: {$settings.background.opacity};"
+  >
+    <Settings />
+    <ChangeTheme />
+    {#if !$settings.opened}
+      <div
+        transition:fade={{ duration: 400 }}
+        class="text-xl p-5 fixed font-bold"
+      >
+        Donkeytype
+      </div>
+    {/if}
+    <Textbox />
+  </div>
 </main>
 
 <style global>
@@ -39,6 +49,10 @@
     font-family: "Roboto Mono", monospace;
     margin: 0;
     height: 100%;
+  }
+
+  .main {
+    z-index: 1;
     background-color: var(--bg-color);
     color: var(--text-color);
   }

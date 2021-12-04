@@ -1,4 +1,4 @@
-import { box, cursor, runState, settings } from "../store";
+import { box, cursor, runState } from "../store";
 import { get, writable } from "svelte/store";
 import type { Writable } from "svelte/store";
 import type { Modes } from "../store";
@@ -183,32 +183,48 @@ export class RunManager {
 
   private handleKeyDown = (e: KeyboardEvent) => {
     const ta = get(textArray);
-    if (e.key === "Backspace" && this.currentWordLetter > 0) {
-      ta[this.currentWord].letters[this.currentWordLetter].active = false;
-      this.currentLetter--;
-      this.currentWordLetter--;
-      ta[this.currentWord].letters[this.currentWordLetter].active = true;
-    }
-
-    this.calculateStatistics();
-  };
-
-  private handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "R") return;
     if (this.ended) return;
-    const ta = get(textArray);
 
+    // ctrl + backspace
+    if (e.ctrlKey && e.key === "Backspace") {
+      if (this.currentWordLetter > 0) {
+        ta[this.currentWord].letters[this.currentWordLetter].active = false;
+        this.currentLetter -= this.currentWordLetter + 1;
+        this.currentWordLetter = 0;
+        ta[this.currentWord].letters[this.currentWordLetter].active = true;
+      }
+      this.calculateStatistics();
+      return;
+    } else if (e.ctrlKey) {
+      return;
+    }
+
+    // backspace
+    if (e.key === "Backspace") {
+      if (this.currentWordLetter > 0) {
+        ta[this.currentWord].letters[this.currentWordLetter].active = false;
+        this.currentLetter--;
+        this.currentWordLetter--;
+        ta[this.currentWord].letters[this.currentWordLetter].active = true;
+      }
+      this.calculateStatistics();
+      return;
+    }
+
+    // correct letter?
     const letter = ta[this.currentWord].letters[this.currentWordLetter];
-
     if (letter.letter === e.key) {
       letter.correct = true;
     } else {
       letter.correct = false;
       if (letter.letter === " ") {
+        this.calculateStatistics();
         return;
       }
     }
 
+    // update Array
     ta[this.currentWord].letters[this.currentWordLetter].active = false;
 
     this.currentLetter++;
@@ -240,15 +256,13 @@ export class RunManager {
     this.currentWordLetter = 0;
   }
 
-  public startEventListeners() {
+  public startEventListener() {
     this.interval = setInterval(this.onInterval, 200);
     document.addEventListener("keydown", this.handleKeyDown);
-    document.addEventListener("keypress", this.handleKeyPress);
   }
 
-  public removeEventListeners() {
+  public removeEventListener() {
     clearInterval(this.interval);
     document.removeEventListener("keydown", this.handleKeyDown);
-    document.removeEventListener("keypress", this.handleKeyPress);
   }
 }

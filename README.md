@@ -13,6 +13,8 @@
   - Customize all aspects of the Textbox like width, letter spacing, line height, caret width...
   
   - Realtime Theme switching
+
+	- Add a background image
   
   - Pick between ALL fonts awailable on [Google Fonts](https://fonts.google.com)
 
