@@ -181,7 +181,7 @@ export class RunManager {
     });
   }
 
-  private handleKeyDown = (e: KeyboardEvent) => {
+  public handleKeyDown = (e: KeyboardEvent) => {
     if (get(settings).opened) return;
     const ta = get(textArray);
     if (e.key === "R") return;

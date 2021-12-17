@@ -16,6 +16,9 @@ export const loadTheme = (resource: string) => {
   document.getElementById("linkContainer").innerHTML = link.outerHTML;
 };
 
-export const getThemeList = async () => {
-  return await fetch("/themes/_list.json").then((res) => res.json());
+let themeListChache: themeList[]
+
+export const getThemeList = async (): Promise<themeList> => {
+  if (!themeListChache) themeListChache = await fetch("/themes/_list.json").then((res) => res.json());
+  return themeListChache
 };

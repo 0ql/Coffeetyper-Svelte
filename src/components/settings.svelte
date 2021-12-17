@@ -8,6 +8,7 @@
   import Button from "./ui/button.svelte";
   import { getFromLocalStorage, saveToLocalStorage } from "../util";
   import { get } from "svelte/store";
+  import { getThemeList } from "../theme"
 
   let fonts: any[];
 
@@ -96,6 +97,23 @@
     s = removeIrrelevant(s);
     $settings = fixBwithA<Settings>($settings, s);
   };
+
+  const randomizeSettings = async () => {
+    $settings.textBox.width = Math.round(Math.random() * 100) + "%"
+    $settings.textBox.lines = Math.round(Math.random() * 10).toString()
+    let lineH: number = Math.random() * 7
+    $settings.textBox.lineHeight = lineH.toFixed(1) + "rem"
+    $settings.textBox.letterSpacing = (Math.random() * 2).toFixed(1) + "rem"
+    $settings.textBox.fontSize = (Math.random() * lineH).toFixed(1) + "rem"
+    $settings.textBox.spaceWidth = (Math.random() * 8).toFixed(1) + "rem"
+
+    let list = await getThemeList()
+    $settings.theme.active = list[Math.round((list.length - 1) * Math.random())].name
+  }
+  
+  const resetToDefault = () => {
+    $settings = template
+  }
 </script>
 
 {#if $settings.opened}
@@ -229,6 +247,12 @@
             <div class="text-xs">Live Time</div>
           </div>
         </div>
+      </div>
+
+      <div class="mt-5">Randomize Settings</div>
+      <div class="flex gap-4 mt-3">
+        <Button on:click={randomizeSettings}>Randomize</Button>
+          <Button on:click={resetToDefault}>Reset to Default</Button>
       </div>
 
       <div class="mt-5">Wordset</div>
