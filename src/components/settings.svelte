@@ -258,6 +258,8 @@
       <div class="mt-5">Wordset</div>
       <Select class="mt-3" bind:value={$settings.wordSet}>
         <option value="top 1k">Top 1k words english</option>
+        <option value="randomAlpha">Random Characters</option>
+        <option value="randomAlphaNum">Random Characters w/ Numbers</option>
       </Select>
 
       <div class="flex gap-4 mt-5">

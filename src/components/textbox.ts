@@ -182,6 +182,8 @@ export class RunManager {
   }
 
   public handleKeyDown = (e: KeyboardEvent) => {
+
+    // check if settings are opened
     if (get(settings).opened) return;
     const ta = get(textArray);
     if (e.key === "R") return;

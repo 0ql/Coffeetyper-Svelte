@@ -8,12 +8,12 @@
   import { formatTime } from "../util";
 
   const [send, receive] = crossfade({
-    duration: parseInt($settings.textBox.caret.duration),
-  });
+    duration: parseInt($settings.textBox.caret.duration), });
 
   let clientHeight = 0;
   let infobar: HTMLDivElement;
   let stats: boolean = false;
+
   let manager: RunManager;
   const results: {
     time: string;
