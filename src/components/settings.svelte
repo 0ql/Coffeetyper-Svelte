@@ -99,16 +99,18 @@
   };
 
   const randomizeSettings = async () => {
-    $settings.textBox.width = Math.round(Math.random() * 100) + "%"
-    $settings.textBox.lines = Math.round(Math.random() * 10).toString()
-    let lineH: number = Math.random() * 7
+    $settings.textBox.width = Math.round(30 + Math.random() * 70) + "%"
+    $settings.textBox.lines = Math.round(1 + Math.random() * 8).toString()
+    let lineH: number = 1 + Math.random() * 7
     $settings.textBox.lineHeight = lineH.toFixed(1) + "rem"
     $settings.textBox.letterSpacing = (Math.random() * 2).toFixed(1) + "rem"
-    $settings.textBox.fontSize = (Math.random() * lineH).toFixed(1) + "rem"
+    $settings.textBox.fontSize = (1 + Math.random() * lineH).toFixed(1) + "rem"
     $settings.textBox.spaceWidth = (Math.random() * 8).toFixed(1) + "rem"
 
     let list = await getThemeList()
     $settings.theme.active = list[Math.round((list.length - 1) * Math.random())].name
+
+    $settings.family = fonts[Math.round(Math.random() * fonts.length)].family
   }
   
   const resetToDefault = () => {
