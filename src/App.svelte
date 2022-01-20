@@ -10,9 +10,11 @@
 		const s = get(settings);
 		if (e.x < window.innerWidth / 3) {
 			s.opened = true;
+			s.cosmetics.theme.opened = false;
 		} else if (e.x > window.innerWidth - window.innerWidth / 4) {
+			s.opened = false;
 			s.cosmetics.theme.opened = true;
-		} else if (s.opened) {
+		} else if (s.opened || s.cosmetics.theme.opened) {
 			s.opened = false;
 			s.cosmetics.theme.opened = false;
 		} else return;

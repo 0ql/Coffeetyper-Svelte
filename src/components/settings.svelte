@@ -71,12 +71,12 @@
 	const importCosmetics = () => {
 		const data = JSON.parse(imported);
 		$settings.cosmetics = fixBwithA($settings.cosmetics, data);
-		refreshCosmetics()
-	}
+		refreshCosmetics();
+	};
 
 	const resetToDefault = () => {
 		$settings = template;
-		refreshCosmetics()
+		refreshCosmetics();
 	};
 
 	getSavedCosmetics();
@@ -331,17 +331,23 @@
 			<div class="flex gap-4">
 				<div>
 					<div class="text-sm my-3">Leaderkey</div>
-					<Input bind:value={$settings.keybindings.leader.key} />
+					<Input class="w-16" bind:value={$settings.keybindings.leader.key} />
 					<div class="text-sm my-3">Reset Run</div>
-					<Input bind:value={$settings.keybindings.reset} />
+					<Input class="w-16" bind:value={$settings.keybindings.reset} />
 					<div class="text-sm my-3">Randomize Settings</div>
-					<Input bind:value={$settings.keybindings.randomizeSettings} />
+					<Input
+						class="w-16"
+						bind:value={$settings.keybindings.randomizeSettings}
+					/>
 				</div>
 				<div>
 					<div class="text-sm my-3">Toggle Settings</div>
-					<Input bind:value={$settings.keybindings.toggleSettings} />
+					<Input
+						class="w-16"
+						bind:value={$settings.keybindings.toggleSettings}
+					/>
 					<div class="text-sm my-3">Toggle Themeswitcher</div>
-					<Input bind:value={$settings.keybindings.toggleTheme} />
+					<Input class="w-16" bind:value={$settings.keybindings.toggleTheme} />
 				</div>
 			</div>
 		</div>
