@@ -239,6 +239,7 @@ const handleKeyDown = async (e: KeyboardEvent) => {
 
   // backspace
   if (e.key === 'Backspace') {
+    e.preventDefault() // prevents backspace from returning to previous page
     if (currentWordLetter > 0) {
       ta[currentWord].letters[currentWordLetter].active = false
       currentLetter--
