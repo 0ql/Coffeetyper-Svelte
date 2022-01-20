@@ -1,3 +1,5 @@
+import { getFromLocalStorage, saveToLocalStorage } from "./util";
+
 export type themeList = {
   name: string;
   bgColor: string;
@@ -16,9 +18,13 @@ export const loadTheme = (resource: string) => {
   document.getElementById("linkContainer").innerHTML = link.outerHTML;
 };
 
-let themeListChache: themeList[]
+let themeListChache: themeList
 
 export const getThemeList = async (): Promise<themeList> => {
-  if (!themeListChache) themeListChache = await fetch("/themes/_list.json").then((res) => res.json());
-  return themeListChache
+	themeListChache = getFromLocalStorage("themeList")
+	if (!themeListChache) {
+		themeListChache = await fetch("/themes/_list.json").then((res) => res.json());
+		saveToLocalStorage("themeList", themeListChache)
+	}
+	return themeListChache
 };

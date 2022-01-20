@@ -2,29 +2,32 @@
 
 ### What is Donkeytype?
 
-[Donkeytype](https://donkeytype.com) is a [Monkeytype](https://monkeytype.com) clone that was originally a personal project of mine to test out [Vite](https://vitejs.dev) and [Windicss](https://windicss.org) and now turned into a decent typing test. 
+[Donkeytype](https://donkeytype.com) is a minimalistic and lightweight typingtest inspired by [Monkeytype](https://monkeytype.com).
 
 ### Features
 
-- Fast loading time
+- ⚡Super Fast loading time ⚡and lightweight
 
-- Highly customizeble
+- Highly customizable
   
-  - Customize all aspects of the Textbox like width, letter spacing, line height, caret width...
+  - Customize all aspects of the textbox like width, letter spacing, line height, caret width...
   
   - Realtime Theme switching
   
   - Add a background image
   
-  - Pick between ALL fonts awailable on [Google Fonts](https://fonts.google.com)
+  - Pick between ALL fonts available on [Google Fonts](https://fonts.google.com)
 
 - Settings get saved to local storage
 
-- Save and switch between instances of your Settings in realtime
+- Save and switch between instances of your cosmetics in realtime
 
-- Export and import Settings or Cosmetics
+- Export and import Cosmetics (as JSON)
+
+- Keybindings
 
 - All settings apply in realtime; no need to reload
+
 
 ### Usage
 
@@ -48,7 +51,7 @@ Donkeytype is written in [Svelte](https://svelte.dev) with Typescript and uses W
 
 ### Should you use Donkeytype?
 
-It still lacks many features and doesn't come close to the features of Monkeytype. But it provides the most important functions of a typing test and is defenetly useable.
+It still lacks some features and isn't so feature rich as Monkeytype. But it provides the most important functions and statistics of a typing test and is definitely useable.
 
 ### Contribute
 

@@ -20,13 +20,13 @@ export const createText = async (): Promise<string> => {
   switch (get(settings).wordSet) {
     case "top 1k":
       const array = await load1ktxtfile();
-      for (let i = 0; i < parseInt(get(settings).textBox.words); i++) {
+      for (let i = 0; i < parseInt(get(settings).cosmetics.textBox.words); i++) {
         let rd = Math.round(array.length * Math.random());
         str += array[rd] + " ";
       }
       return str;
     case "randomAlpha":
-      for (let i = 0; i < parseInt(get(settings).textBox.words); i++) {
+      for (let i = 0; i < parseInt(get(settings).cosmetics.textBox.words); i++) {
         let len = Math.round(Math.random() * 7)
         let word: string = ""
         for (let i = 0; i < len; i++) {
@@ -37,7 +37,7 @@ export const createText = async (): Promise<string> => {
       }
       return str;
     case "randomAlphaNum":
-      for (let i = 0; i < parseInt(get(settings).textBox.words); i++) {
+      for (let i = 0; i < parseInt(get(settings).cosmetics.textBox.words); i++) {
         let len = Math.round(Math.random() * 7)
         let word: string = ""
         if (Math.random() > 0.7) {

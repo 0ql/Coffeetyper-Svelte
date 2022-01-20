@@ -11,11 +11,11 @@
 
   const changeTheme = (name: string) => {
     loadTheme(name);
-    $settings.theme.active = name;
+    $settings.cosmetics.theme.active = name;
   };
 </script>
 
-{#if $settings.theme.opened === true}
+{#if $settings.cosmetics.theme.opened === true}
   <div
     transition:fade={{ duration: 400 }}
     class="fixed h-screen w-screen flex justify-end overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-current scrollbar-thumb-rounded scrollbar-track-transparent z-2"

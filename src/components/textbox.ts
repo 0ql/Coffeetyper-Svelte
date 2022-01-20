@@ -1,271 +1,376 @@
-import { box, cursor, runState, settings } from "../store";
-import { get, writable } from "svelte/store";
-import type { Writable } from "svelte/store";
-import type { Modes } from "../store";
-import { formatTime } from "../util";
+import { runState, settings } from '../store'
+import { get, writable } from 'svelte/store'
+import type { Writable } from 'svelte/store'
+import type { Modes } from '../store'
+import { formatTime } from '../util'
+import { createText } from './words'
+import { randomizeSettings } from './settings'
 
-export class Timer {
-  public progress: number;
-  private interval: any;
-  public timeString: string;
-  public running: boolean;
-  public passed: number;
+// === Timer stuff ===
 
-  constructor() {
-    this.passed = 0;
-    this.progress = 0;
-    this.timeString = "0:00";
-    this.running = false;
-  }
+let progress: number,
+  running: boolean,
+  passed: number = 0,
+  timerInterval: NodeJS.Timer
 
-  public start(mode: Modes, maxTime: number, done: () => void) {
-    mode === "countdown" ? (this.progress = maxTime) : null;
-    this.running = true;
+export const startTimer = () => {
+  let mode: Modes = get(settings).modeName
+  let maxTime = get(settings).mode.time
 
-    runState.update((state) => {
-      state.timeString = formatTime(this.progress);
-      state.progress = this.progress;
-      state.timePassed = this.passed;
-      return state;
-    });
+  mode === 'countdown' ? (progress = maxTime) : null
+  running = true
 
-    this.interval = setInterval(() => {
-      if (this.running) {
-        this.passed++;
-        mode === "countdown" ? this.progress-- : null;
-        mode === "countup" ? this.progress++ : null;
-        mode === "timed" ? this.progress++ : null;
+  runState.update((state) => {
+    state.timeString = formatTime(progress)
+    state.progress = progress
+    state.timePassed = passed
+    return state
+  })
 
-        if (mode === "countdown" && this.progress === 0) {
-          this.reset();
-        }
+  timerInterval = setInterval(() => {
+    if (running) {
+      passed++
+      mode === 'countdown' ? progress-- : null
+      mode === 'countup' ? progress++ : null
+      mode === 'timed' ? progress++ : null
 
-        if (
-          (this.progress === 0 && mode === "countdown") ||
-          (this.progress == maxTime && mode === "countup")
-        ) {
-          this.running = false;
-          done();
-        }
+      if (mode === 'countdown' && progress === 0) {
+				runState.update((state) => {
+					state.timeString = formatTime(progress)
+					state.progress = progress
+					state.timePassed = passed
+					return state
+				})
+				endRun()
+				return
+			}
 
-        runState.update((state) => {
-          state.timeString = formatTime(this.progress);
-          state.progress = this.progress;
-          state.timePassed = this.passed;
-          state.wpm = Math.round((state.correctWordCount / this.passed) * 60);
-          state.lpm = Math.round((state.correctLetterCount / this.passed) * 60);
-          return state;
-        });
+      if (
+        (progress === 0 && mode === 'countdown') ||
+        (progress == maxTime && mode === 'countup')
+      ) {
+        running = false
+
+				runState.update((state) => {
+					state.timeString = formatTime(progress)
+					state.progress = progress
+					state.timePassed = passed
+					return state
+				})
+        endRun()
+        return
       }
-    }, 1000);
-  }
 
-  public pause() {
-    this.running = false;
-  }
-
-  public reset() {
-    this.running = false;
-    clearInterval(this.interval);
-    this.progress = 0;
-    this.passed = 0;
-  }
+      runState.update((state) => {
+        state.timeString = formatTime(progress)
+        state.progress = progress
+        state.timePassed = passed
+        return state
+      })
+    }
+  }, 1000)
 }
+
+const resetTimer = () => {
+  running = false
+  clearInterval(timerInterval)
+  progress = 0
+  passed = 0
+}
+
+// === Textbox Logic ===
 
 export const letterHighlighting = (obj: any) => {
   if (obj.correct === true) {
-    return "color: var(--main-color)";
+    return 'color: var(--main-color)'
   } else if (obj.correct === false) {
-    return "color: var(--error-color)";
+    return 'color: var(--error-color)'
   }
-};
+}
 
 const getOffset = (el: HTMLElement) => {
-  const rect = el.getBoundingClientRect();
+  const rect = el.getBoundingClientRect()
   return {
     left: rect.left + window.scrollX,
     top: rect.top + window.scrollY,
-  };
-};
+  }
+}
 
 type TextArr = {
   letters: {
-    active: boolean;
-    correct: boolean;
-    letter: string;
-  }[];
-}[];
+    active: boolean
+    correct: boolean
+    letter: string
+  }[]
+}[]
 
-export const textArray: Writable<TextArr> = writable([]);
+export const textArray: Writable<TextArr> = writable([])
 
-export class RunManager {
-  infobar: HTMLDivElement;
-  interval: NodeJS.Timer;
-  currentLetter: number;
-  currentWord: number;
-  currentWordLetter: number;
-  ended: boolean;
-  userInput: () => void;
-  onRunEnded: () => void;
+let currentWord: number = 0,
+  currentWordLetter: number = 0,
+  currentLetter: number = 0
 
-  constructor(
-    infobar: HTMLDivElement,
-    userInput: () => void,
-    onRunEnded: () => void
-  ) {
-    this.userInput = userInput;
-    this.infobar = infobar;
-    this.currentLetter = 0;
-    this.currentWord = 0;
-    this.currentWordLetter = 0;
-    this.onRunEnded = onRunEnded;
-    this.ended = false;
-  }
+// autoscrolling
+const onInterval = () => {
+  const c = document.getElementById('#cursor')
 
-  private onInterval = () => {
-    const c = get(cursor);
-    if (c) {
-      const b = get(box);
-      let innerHeight = window.innerHeight + this.infobar.clientHeight;
-      if (getOffset(c).top > innerHeight / 2) {
-        b.scrollBy({
-          top: c.clientHeight,
-          behavior: "smooth",
-        });
-      } else if (getOffset(c).top < innerHeight / 2 - c.clientHeight * 2) {
-        b.scrollBy({
-          top: -c.clientHeight,
-          behavior: "smooth",
-        });
-      }
+  if (c) {
+		const b = document.getElementById("#box")
+    const infobar = document.getElementById('#infobar') as HTMLDivElement
+
+    let innerHeight = window.innerHeight + infobar.clientHeight
+    if (getOffset(c).top > innerHeight / 2) {
+      b.scrollBy({
+        top: c.clientHeight,
+        behavior: 'smooth',
+      })
+    } else if (getOffset(c).top < innerHeight / 2 - c.clientHeight * 2) {
+      b.scrollBy({
+        top: -c.clientHeight,
+        behavior: 'smooth',
+      })
     }
-  };
+  }
+}
 
-  private calculateStatistics() {
-    textArray.update((ta: TextArr) => {
-      let correctLetterCount = 0,
-        correctWordCount = 0,
-        progress = 0;
+const updateRunStateStats = () => {
+  textArray.update((ta: TextArr) => {
+    let correctLetterCount = 0,
+      correctWordCount = 0,
+      progress = 0
 
-      ta.forEach((word) => {
-        // calculate progress and accuracy
-        word.letters.forEach((letter) => {
-          if (letter.correct !== null) {
-            letter.correct === true ? correctLetterCount++ : null;
-            progress++;
-          }
-        });
-
-        // calculate words per minute
-        let falseLetterFlag = false;
-        word.letters.forEach((letter) => {
-          if (!letter.correct) {
-            falseLetterFlag = true;
-          }
-        });
-
-        if (!falseLetterFlag) {
-          correctWordCount++;
+    ta.forEach((word) => {
+      word.letters.forEach((letter) => {
+        if (letter.correct !== null) {
+          letter.correct === true ? correctLetterCount++ : null
+          progress++
         }
-      });
+      })
 
-      runState.update((state) => {
-        state.accuracy = progress !== 0 ? correctLetterCount / progress : 0;
-        state.progress = progress;
-        state.correctLetterCount = correctLetterCount;
-        state.correctWordCount = correctWordCount;
-        return state;
-      });
+      let falseLetterFlag = false
+      word.letters.forEach((letter) => {
+        if (!letter.correct) {
+          falseLetterFlag = true
+        }
+      })
 
-      return ta;
-    });
-  }
-
-  public handleKeyDown = (e: KeyboardEvent) => {
-
-    // check if settings are opened
-    if (get(settings).opened) return;
-    const ta = get(textArray);
-    if (e.key === "R") return;
-    if (this.ended) return;
-
-    // ctrl + backspace
-    if (e.ctrlKey && e.key === "Backspace") {
-      if (this.currentWordLetter > 0) {
-        ta[this.currentWord].letters[this.currentWordLetter].active = false;
-        this.currentLetter -= this.currentWordLetter + 1;
-        this.currentWordLetter = 0;
-        ta[this.currentWord].letters[this.currentWordLetter].active = true;
+      if (!falseLetterFlag) {
+        correctWordCount++
       }
-      this.calculateStatistics();
-      return;
-    } else if (e.ctrlKey) {
-      return;
+    })
+
+    runState.update((rs) => {
+      rs.accuracy = progress !== 0 ? Math.round(correctLetterCount / progress * 100) : 0
+      rs.progress = progress
+      rs.correctLetterCount = correctLetterCount
+      rs.correctWordCount = correctWordCount
+			rs.wpm = Math.round(correctWordCount / (rs.timePassed / 60))
+ 			rs.wpm = isNaN(rs.wpm) ? 0 : rs.wpm
+      return rs
+    })
+
+    return ta
+  })
+}
+
+const handleKeyDown = async (e: KeyboardEvent) => {
+  let s = get(settings)
+  let k = s.keybindings
+
+  // === Handle Shortcuts ===
+
+  // if leader key was pressed return
+  if (e.key === k.leader.key) {
+    s.keybindings.leader.pressed = true
+    settings.set(s)
+    return
+  }
+
+  // leader is active
+  if (s.keybindings.leader.pressed) {
+    // toggle Settings
+    if (e.key === k.toggleSettings) {
+      s.opened = !s.opened
     }
 
-    // backspace
-    if (e.key === "Backspace") {
-      if (this.currentWordLetter > 0) {
-        ta[this.currentWord].letters[this.currentWordLetter].active = false;
-        this.currentLetter--;
-        this.currentWordLetter--;
-        ta[this.currentWord].letters[this.currentWordLetter].active = true;
+    // reset Run
+    if (e.key === k.reset) {
+      resetRun()
+    }
+
+    // toggle Themeswitcher
+		if (e.key === k.toggleTheme) {
+			s.cosmetics.theme.opened = !s.cosmetics.theme.opened
+		}
+
+		if (e.key === k.randomizeSettings) {
+			randomizeSettings()
+		}
+
+    s.keybindings.leader.pressed = false
+		settings.set(s)
+    return
+  }
+
+  // check if settings are opened
+  if (s.opened) return
+
+  // check if run ended
+  if (get(runState).ended) return
+
+  // === Handle special Keys ===
+
+  const ta = get(textArray)
+
+  // ctrl + backspace
+  if (e.ctrlKey && e.key === 'Backspace') {
+    if (currentWordLetter > 0) {
+      ta[currentWord].letters[currentWordLetter].active = false
+      currentLetter -= currentWordLetter + 1
+      currentWordLetter = 0
+      ta[currentWord].letters[currentWordLetter].active = true
+    }
+    updateRunStateStats()
+
+    return
+  } else if (e.ctrlKey) {
+    return
+  }
+
+  // backspace
+  if (e.key === 'Backspace') {
+    if (currentWordLetter > 0) {
+      ta[currentWord].letters[currentWordLetter].active = false
+      currentLetter--
+      currentWordLetter--
+      ta[currentWord].letters[currentWordLetter].active = true
+    }
+    updateRunStateStats()
+    return
+  }
+
+  // === Coloring of characters ===
+
+  // correct letter?
+  const letter = ta[currentWord].letters[currentWordLetter]
+  if (letter.letter === e.key) {
+    letter.correct = true
+  } else {
+    letter.correct = false
+    if (letter.letter === ' ') {
+      updateRunStateStats()
+      return
+    }
+  }
+
+  // update Array
+  ta[currentWord].letters[currentWordLetter].active = false
+
+  currentLetter++
+  currentWordLetter++
+
+  if (
+    currentWord + 1 === ta.length - 1 &&
+    currentWordLetter === ta[currentWord].letters.length
+  ) {
+    // no letters left
+    endRun()
+  }
+
+  if (ta[currentWord].letters.length === currentWordLetter) {
+    currentWord++
+    currentWordLetter = 0
+  }
+
+  ta[currentWord].letters[currentWordLetter].active = true
+
+  updateRunStateStats()
+
+  settings.set(s)
+}
+
+let firstRun: boolean = true
+
+export const startRun = async () => {
+	if (firstRun) {
+  	startEventListener()
+		firstRun = false
+	}
+  await newText()
+  startTimer()
+}
+
+// show statistics
+const endRun = () => {
+	updateRunStateStats()
+  console.log('Run Ended...')
+  runState.update((s) => {
+    s.ended = true
+
+    return s
+  })
+	// removeEventListener()
+	resetTimer()
+	console.log(get(runState))
+}
+
+// full reset
+const resetRun = async () => {
+  console.log('Reseting...')
+  // removeEventListener()
+  runState.set({
+    ended: false,
+    accuracy: 0,
+    correctLetterCount: 0,
+    correctWordCount: 0,
+    progress: 0,
+    timeString: '0:00',
+    wpm: 0,
+    lpm: 0,
+    timePassed: 0,
+  })
+
+  currentWord = 0
+  currentLetter = 0
+  currentWordLetter = 0
+  resetTimer()
+
+  await startRun()
+}
+
+let autoScrollInterval: NodeJS.Timer
+
+export const startEventListener = () => {
+  autoScrollInterval = setInterval(onInterval, 200)
+  document.addEventListener('keydown', handleKeyDown)
+}
+
+export const removeEventListener = () => {
+  clearInterval(autoScrollInterval)
+  document.removeEventListener('keydown', handleKeyDown)
+}
+
+const newText = async () => {
+  let txt = await createText()
+  textArray.set(
+    txt.split(' ').map((word: string, i: number) => {
+      const w = word.split('').map((letter, ii: number) => {
+        return {
+          letter: letter,
+          correct: null,
+          active: i === 0 && ii === 0 ? true : false,
+        }
+      })
+
+      w.push({
+        letter: ' ',
+        correct: null,
+        active: false,
+      })
+
+      return {
+        letters: w,
       }
-      this.calculateStatistics();
-      return;
-    }
-
-    // correct letter?
-    const letter = ta[this.currentWord].letters[this.currentWordLetter];
-    if (letter.letter === e.key) {
-      letter.correct = true;
-    } else {
-      letter.correct = false;
-      if (letter.letter === " ") {
-        this.calculateStatistics();
-        return;
-      }
-    }
-
-    // update Array
-    ta[this.currentWord].letters[this.currentWordLetter].active = false;
-
-    this.currentLetter++;
-    this.currentWordLetter++;
-
-    if (
-      this.currentWord + 1 === ta.length - 1 &&
-      this.currentWordLetter === ta[this.currentWord].letters.length
-    ) {
-      this.onRunEnded();
-      this.ended = true;
-    }
-
-    if (ta[this.currentWord].letters.length === this.currentWordLetter) {
-      this.currentWord++;
-      this.currentWordLetter = 0;
-    }
-
-    ta[this.currentWord].letters[this.currentWordLetter].active = true;
-
-    this.userInput();
-    this.calculateStatistics();
-  };
-
-  public reset() {
-    this.ended = false;
-    this.currentLetter = 0;
-    this.currentWord = 0;
-    this.currentWordLetter = 0;
-  }
-
-  public startEventListener() {
-    this.interval = setInterval(this.onInterval, 200);
-    document.addEventListener("keydown", this.handleKeyDown);
-  }
-
-  public removeEventListener() {
-    clearInterval(this.interval);
-    document.removeEventListener("keydown", this.handleKeyDown);
-  }
+    })
+  )
 }
