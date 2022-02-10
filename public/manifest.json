@@ -1,0 +1,14 @@
+{
+	"name": "Coffeetyper",
+	"start_url": "./",
+	"icons": [
+		{
+			"src": "./static/favicon.svg",
+			"purpose": "maskable any",
+			"sizes": "any"
+		}
+	],
+	"display": "standalone",
+	"scope": "/",
+	"description": "Minimal, fast, bloatless and open source typingtest."
+}

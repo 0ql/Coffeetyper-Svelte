@@ -1,0 +1,34 @@
+:root {
+  --bg-color: #000;
+  --main-color: #eee;
+  --caret-color: #eee;
+  --sub-color: #444;
+  --text-color: #eee;
+  --error-color: #fff;
+  --error-extra-color: #d8d8d8;
+  --colorful-error-color: #fff;
+  --colorful-error-extra-color: #d8d8d8;
+}
+
+@keyframes shadow {
+  to {
+    color: #000;
+  }
+}
+
+@keyframes shadow-repeat {
+  50% {
+    color: #000;
+  }
+  100% {
+    color: #eee;
+  }
+}
+
+.correct {
+  animation: shadow 5s linear 1 forwards;
+}
+
+button:hover, input:hover, select:hover {
+  animation: shadow-repeat 3s linear infinite forwards;
+}
