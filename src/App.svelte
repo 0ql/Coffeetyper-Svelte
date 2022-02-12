@@ -3,7 +3,6 @@
   import { get } from 'svelte/store'
   import { fade } from 'svelte/transition'
   import ChangeTheme from './components/changeTheme.svelte'
-  import FlyBy from './components/flyBy.svelte'
   import Notifications from './components/notifications.svelte'
   import Settings from './components/settings.svelte'
   import Textbox from './components/textbox.svelte'
@@ -11,11 +10,7 @@
   import { remToPx } from './lib/util'
   import { checkCacheAgeAndRenew } from './lib/cache'
   import Results from './components/results.svelte'
-
-  const tbModes = {
-    classic: Textbox,
-    speed: FlyBy,
-  }
+import Downfall from './components/downfall.svelte'
 
   const mouseMoved = (e: MouseEvent) => {
     const s = get(settings)
@@ -81,11 +76,17 @@
       </div>
     {/if}
 
-    {#if !$runState.ended}
-      <Textbox />
-    {:else}
-      <Results />
-    {/if}
+
+		{#if $settings.cosmetics.textBox.mode === 'downfall'}
+			<Downfall />
+		{:else}
+			{#if !$runState.ended}
+				<Textbox />
+			{:else}
+				<Results />
+			{/if}
+		{/if}
+		
   </div>
 </main>
 

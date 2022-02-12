@@ -84,7 +84,10 @@
               <div>
                 <Word {word} caret={false} />
                 {#if word.wpm}
-									<div class="h-1 bg-[var(--sub-color)]" style="width: {word.wpm}px" />
+                  <div
+                    class="h-1 bg-[var(--sub-color)]"
+                    style="width: {word.wpm}px"
+                  />
                 {/if}
               </div>
             </div>

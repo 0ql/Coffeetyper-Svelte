@@ -138,7 +138,7 @@
 
         <div class="mt-3 col-span-4">Textbox</div>
 
-        <Tooltip hoverText="In 'Speed' Mode at least 6 lines are recommended.">
+        <Tooltip hoverText="In 'Speed' Mode at least 6 lines are recommended. Both 'Speed' and 'Downfall' are experimental.">
           <div>
             <div class="text-xs">Mode</div>
             <Select
@@ -147,6 +147,7 @@
               bind:value={$settings.cosmetics.textBox.mode}
             >
               <option value="classic">Classic</option>
+							<option value="downfall">Downfall</option>
               <option value="speed">Speed</option>
             </Select>
           </div>
