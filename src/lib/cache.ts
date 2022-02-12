@@ -1,6 +1,23 @@
 import { getFromLocalStorage, saveToLocalStorage } from "./util"
 import { template } from "../store"
 
+const cacheFiles = () => {
+  caches.open('main').then((cache) => {
+    return cache.addAll([
+      './',
+			'./manifest.json',
+      './static/1000.json',
+      './static/favicon.ico',
+      './static/fonts.json',
+      './assets/index.js',
+      './assets/chunk.js',
+      './assets/style.css',
+      './themes/_list.json',
+      './themes/bliss.css',
+    ])
+  })
+}
+
 export const checkCacheAgeAndRenew = async () => {
   const age = getFromLocalStorage('cacheAge')
 
@@ -19,23 +36,6 @@ export const checkCacheAgeAndRenew = async () => {
     cacheFiles()
     cacheCssFileAndFonts(template.cosmetics.family)
   }
-}
-
-const cacheFiles = () => {
-  caches.open('main').then((cache) => {
-    return cache.addAll([
-      './',
-			'./manifest.json',
-      './static/1000.json',
-      './static/favicon.svg',
-      './static/fonts.json',
-      './assets/index.js',
-      './assets/chunk.js',
-      './assets/style.css',
-      './themes/_list.json',
-      './themes/bliss.css',
-    ])
-  })
 }
 
 export const cacheCssFileAndFonts = async (family: string) => {
