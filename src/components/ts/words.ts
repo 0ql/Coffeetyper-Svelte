@@ -10,7 +10,7 @@ export const wikipediaRandomPagePlainTextTopDesc = async (): Promise<string> => 
   const res = await fetch(`https://en.wikipedia.org/w/api.php?
 		format=json&action=query&generator=random
 		&grnnamespace=0&prop=extracts&exintro
-		&explaintext&grnlimit=10&origin=*`)
+		&explaintext&grnlimit=6&origin=*`)
   if (res.status !== 200) {
     sendNotification({
       type: 'error',
@@ -19,8 +19,15 @@ export const wikipediaRandomPagePlainTextTopDesc = async (): Promise<string> => 
 		return
   }
   const jsn = await res.json()
-	console.log(jsn)
-	return ""
+	let str = ''
+	let wordCount = 0
+	Object.keys(jsn.query.pages).forEach(key => {
+		if (wordCount < parseInt(get(settings).words) && jsn.query.pages[key].extract.length > 50) {
+			wordCount += jsn.query.pages[key].extract.length
+			str += jsn.query.pages[key].extract
+		}
+	})
+	return str
 }
 
 const getRandomWordStrFromArr = (arr: string[], amount: number): string => {
@@ -43,8 +50,7 @@ export const createText = async (): Promise<string> => {
 				str = getRandomWordStrFromArr(await load1ktxtfile(), parseInt(S.words))
 				break
 		}
-	} else if (gen.set === 'api') {
-		switch (gen.preSet) {
+	} else if (gen.set === 'api') { switch (gen.preSet) {
 			case 'wikipedia':
 				str = await wikipediaRandomPagePlainTextTopDesc()
 				break
