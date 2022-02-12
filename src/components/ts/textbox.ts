@@ -1,90 +1,11 @@
-import { runState, settings, textArray } from '../store'
 import { get } from 'svelte/store'
-import type { Modes, TextArr, RunState, WordT } from '../store'
-import { formatTime } from '../util'
+import { Letters, runState, settings, textArray } from '../../store'
+import type { TextArr, RunState, Word } from '../../store'
+import { remToPx } from '../../lib/util'
 import { createText } from './words'
 import { randomizeSettings } from './settings'
-import { crossfade } from "svelte/transition";
-
-// === Timer stuff ===
-
-let progress: number = 0,
-  running: boolean,
-  passed = 0,
-  timerInterval: NodeJS.Timer,
-  mode: Modes,
-  maxTime: number
-
-const initTimer = () => {
-  mode = get(settings).modeName
-  maxTime = get(settings).mode.time
-
-  mode === 'countdown' ? (progress = maxTime) : null
-
-  runState.update((state) => {
-    state.timeString = formatTime(progress)
-    state.progress = progress
-    state.timePassed = passed
-    return state
-  })
-}
-
-export const startTimer = () => {
-  running = true
-
-  timerInterval = setInterval(() => {
-    if (running) {
-      passed++
-      mode === 'countdown' ? progress-- : null
-      mode === 'countup' ? progress++ : null
-      mode === 'timed' ? progress++ : null
-
-      if (mode === 'countdown' && progress === 0) {
-        runState.update((state) => {
-          state.timeString = formatTime(progress)
-          state.progress = progress
-          state.timePassed = passed
-          return state
-        })
-        endRun()
-        return
-      }
-
-      if (
-        (progress === 0 && mode === 'countdown') ||
-        (progress == maxTime && mode === 'countup')
-      ) {
-        running = false
-
-        runState.update((state) => {
-          state.timeString = formatTime(progress)
-          state.progress = progress
-          state.timePassed = passed
-          return state
-        })
-        endRun()
-        return
-      }
-
-      runState.update((state) => {
-        state.timeString = formatTime(progress)
-        state.progress = progress
-        state.timePassed = passed
-
-        return state
-      })
-
-      updateRunStateStats()
-    }
-  }, 1000)
-}
-
-const resetTimer = () => {
-  running = false
-  clearInterval(timerInterval)
-  progress = 0
-  passed = 0
-}
+import { crossfade } from 'svelte/transition'
+import { initTimer, resetTimer, startTimer } from '../../lib/timer'
 
 // === Textbox Logic ===
 
@@ -113,35 +34,38 @@ let currentWord = 0,
 
 // autoscrolling
 const onInterval = () => {
-  const c = document.getElementById('#caret')
+  const S = get(settings)
+  if (S.cosmetics.textBox.mode === 'classic') {
+    const c = document.getElementById('caret')
 
-  if (c && get(runState).running) {
-    const b = document.getElementById('#box')
-    const infobar = document.getElementById('#infobar') as HTMLDivElement
+    if (c && get(runState).running) {
+      const b = document.getElementById('box')
+      const infobar = document.getElementById('infobar') as HTMLDivElement
 
-    let innerHeight = window.innerHeight + infobar.clientHeight
-    if (getOffset(c).top > innerHeight / 2) {
-      b.scrollBy({
-        top: c.clientHeight,
-        behavior: 'smooth',
-      })
-    } else if (getOffset(c).top < innerHeight / 2 - c.clientHeight * 2) {
-      b.scrollBy({
-        top: -c.clientHeight,
-        behavior: 'smooth',
-      })
+      let innerHeight = window.innerHeight + infobar.clientHeight
+      if (getOffset(c).top > innerHeight / 2) {
+        b.scrollBy({
+          top: remToPx(parseFloat(S.cosmetics.textBox.lineHeight)),
+          behavior: 'smooth',
+        })
+      } else if (getOffset(c).top < innerHeight / 2 - c.clientHeight * 2) {
+        b.scrollBy({
+          top: -remToPx(parseFloat(S.cosmetics.textBox.lineHeight)),
+          behavior: 'smooth',
+        })
+      }
     }
   }
 }
 
-const updateRunStateStats = () => {
+export const updateRunStateStats = () => {
   textArray.update((ta: TextArr) => {
     let correctLetterCount = 0,
       correctWordCount = 0,
       progress = 0
 
     ta.forEach((word) => {
-      word.forEach((letter) => {
+      word.letters.forEach((letter) => {
         if (letter.correct !== null) {
           letter.correct === true ? correctLetterCount++ : null
           progress++
@@ -149,7 +73,7 @@ const updateRunStateStats = () => {
       })
 
       let falseLetterFlag = false
-      word.forEach((letter) => {
+      word.letters.forEach((letter) => {
         if (!letter.correct) {
           falseLetterFlag = true
         }
@@ -162,8 +86,8 @@ const updateRunStateStats = () => {
 
     let correctLettersLastSecond = 0
     while (lastWord !== currentWord) {
-      for (let i = letterOfLastWord; i < ta[lastWord].length; i++) {
-        if (ta[lastWord][i].correct) {
+      for (let i = letterOfLastWord; i < ta[lastWord].letters.length; i++) {
+        if (ta[lastWord].letters[i].correct) {
           correctLettersLastSecond++
         }
       }
@@ -171,7 +95,7 @@ const updateRunStateStats = () => {
       lastWord++
     }
     for (let i = letterOfLastWord; i < currentWordLetter; i++) {
-      if (ta[lastWord][i].correct) {
+      if (ta[lastWord].letters[i].correct) {
         correctLettersLastSecond++
       }
     }
@@ -183,7 +107,8 @@ const updateRunStateStats = () => {
       rs.correctLetterCount = correctLetterCount
       rs.correctWordCount = correctWordCount
 
-      // taking avarage length of words in english language (~5) to calculate live WPM
+      // taking avarage length of words in english language (~5) to calculate live
+      // WPM
       rs.liveWPM = Math.round((correctLettersLastSecond / 5) * 60)
       rs.liveSPM = correctLettersLastSecond * 60
       return rs
@@ -264,12 +189,12 @@ const handleKeyDown = async (e: KeyboardEvent) => {
   // ctrl + backspace
   if (e.ctrlKey && e.key === 'Backspace') {
     if (currentWordLetter > 0) {
-      ta[currentWord][currentWordLetter].active = false
+      ta[currentWord].letters[currentWordLetter].active = false
       currentWordLetter = 0
-      ta[currentWord][currentWordLetter].active = true
-      ta[currentWord][currentWordLetter].correct = null
+      ta[currentWord].letters[currentWordLetter].active = true
+      ta[currentWord].letters[currentWordLetter].correct = null
 
-      ta[currentWord].forEach((letter) => {
+      ta[currentWord].letters.forEach((letter) => {
         letter.correct = null
       })
     }
@@ -283,21 +208,21 @@ const handleKeyDown = async (e: KeyboardEvent) => {
   if (e.key === 'Backspace') {
     e.preventDefault() // prevents backspace from returning to previous page
     if (currentWordLetter > 0) {
-      ta[currentWord][currentWordLetter].active = false
+      ta[currentWord].letters[currentWordLetter].active = false
       currentWordLetter--
-      ta[currentWord][currentWordLetter].active = true
+      ta[currentWord].letters[currentWordLetter].active = true
 
-      ta[currentWord][currentWordLetter].correct = null
+      ta[currentWord].letters[currentWordLetter].correct = null
     }
     return
   }
 
-	if (e.key === 'Shift') return
+  if (e.key === 'Shift') return
 
   // === Coloring of characters ===
 
   // correct letter?
-  const letter = ta[currentWord][currentWordLetter]
+  const letter = ta[currentWord].letters[currentWordLetter]
   if (letter.letter === e.key) {
     letter.correct = true
   } else {
@@ -308,26 +233,53 @@ const handleKeyDown = async (e: KeyboardEvent) => {
     }
   }
 
+	if (currentWord === 0 && currentWordLetter === 0 && s.cosmetics.textBox.mode === 'speed') {
+		// set tstart now on initial input
+		ta[currentWord].tstart = Date.now()
+	}
+
   // update Array
-  ta[currentWord][currentWordLetter].active = false
+  ta[currentWord].letters[currentWordLetter].active = false
 
   currentWordLetter++
 
+
+  if (
+    s.cosmetics.textBox.mode === 'speed' &&
+    ta[currentWord].letters[currentWordLetter].letter === ' '
+  ) {
+		ta[currentWord].tend = Date.now()
+		ta[currentWord].duration = ta[currentWord].tend - ta[currentWord].tstart
+		let correctLettersInCurrentWord = 0
+		ta[currentWord].letters.forEach(l => {
+			if (l.correct) correctLettersInCurrentWord++
+		})
+		ta[currentWord].wpm = parseFloat(((correctLettersInCurrentWord / 5) / (ta[currentWord].duration / 60000)).toFixed(2))
+    currentWord++
+    currentWordLetter = 0
+    document.getElementById('box').scrollBy({
+      top: remToPx(parseFloat(s.cosmetics.textBox.lineHeight)),
+      behavior: 'smooth',
+    })
+		ta[currentWord].tstart = Date.now()
+  }
+
   if (
     currentWord + 1 === ta.length - 1 &&
-    currentWordLetter === ta[currentWord].length
+    currentWordLetter === ta[currentWord].letters.length
   ) {
     // no letters left
     endRun()
-		return
+    return
   }
 
-  if (ta[currentWord].length === currentWordLetter) {
+  if (ta[currentWord].letters.length === currentWordLetter) {
+    // end of word reached
     currentWord++
     currentWordLetter = 0
   }
 
-  ta[currentWord][currentWordLetter].active = true
+  ta[currentWord].letters[currentWordLetter].active = true
 
   settings.set(s)
 }
@@ -344,7 +296,7 @@ export const startRun = async () => {
 }
 
 // show statistics
-const endRun = () => {
+export const endRun = () => {
   runState.update((rs: RunState) => {
     rs.aggSPM = Math.round(rs.correctLetterCount / (rs.timePassed / 60))
     rs.aggWPM = Math.round(rs.aggSPM / 5)
@@ -365,7 +317,7 @@ const endRun = () => {
 }
 
 // full reset
-const resetRun = async () => {
+export const resetRun = async () => {
   userTyped = false
   runState.set({
     ended: false,
@@ -390,14 +342,13 @@ const resetRun = async () => {
   lastWord = 0
   letterOfLastWord = 0
   resetTimer()
-	
 
   await startRun()
 
-	document.getElementById("#box").scrollTo({
-		top: 0,
-		behavior: 'smooth'
-	})
+  document.getElementById('box').scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  })
 }
 
 let autoScrollInterval: NodeJS.Timer
@@ -415,22 +366,28 @@ export const removeEventListener = () => {
 const newText = async () => {
   let txt = await createText()
   textArray.set(
-    txt.split(' ').map((word: string, i: number): WordT => {
-      const w: WordT = word.split('').map((letter, ii: number) => {
-        return {
-          letter: letter,
-          correct: null,
-          active: i === 0 && ii === 0 ? true : false,
-        }
+    txt.split(' ').map((word: string, i: number): Word => {
+      const letters: Letters = word.split('').map((letter, ii: number) => {
+				return {
+					letter: letter,
+					correct: null,
+					active: i === 0 && ii === 0 ? true : false,
+				}
       })
+			letters.push({
+				letter: ' ',
+				correct: null,
+				active: false,
+			})
 
-      w.push({
-        letter: ' ',
-        correct: null,
-        active: false,
-      })
-
-      return w
+      return {
+				wpm: null,
+				spm: null,
+				tstart: null,
+				tend: null,
+				duration: null,
+				letters: letters
+			}
     })
   )
 }

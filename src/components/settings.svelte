@@ -5,10 +5,11 @@
 	import Select from "./ui/select.svelte";
 	import Checkbox from "./ui/checkbox.svelte";
 	import Button from "./ui/button.svelte";
-	import { getFromLocalStorage, saveToLocalStorage } from "../util";
-	import { getFonts, randomizeSettings, saveCosmetics } from "./settings";
-	import { sendNotification } from "./notifications";
+	import { getFromLocalStorage, saveToLocalStorage } from "../lib/util";
+	import { getFonts, randomizeSettings, saveCosmetics } from "./ts/settings";
+	import { sendNotification } from "./ts/notifications";
 	import Tooltip from "./ui/tooltip.svelte";
+import { endRun, resetRun } from "./ts/textbox";
 
 	let fonts: string[];
 	let newName: string;
@@ -132,7 +133,16 @@
 				</div>
 
 				<div class="mt-3 col-span-4">Textbox</div>
-
+				
+				<Tooltip hoverText="In 'Speed' Mode at least 6 lines are recommended.">
+					<div>
+						<div class="text-xs">Mode</div>
+						<Select class="h-10 w-full mt-2" on:change={resetRun} bind:value={$settings.cosmetics.textBox.mode}>
+							<option value="classic">Classic</option>
+							<option value="speed">Speed</option>
+						</Select>
+					</div>
+				</Tooltip>
 				<div>
 					<div class="text-xs">Width</div>
 					<Input
@@ -176,7 +186,7 @@
 						bind:value={$settings.cosmetics.textBox.spaceWidth}
 					/>
 				</div>
-				<div class="col-span-2" />
+				<div class="col-span-1" />
 
 				<div class="col-span-4 mt-3">Text Generation</div>
 				

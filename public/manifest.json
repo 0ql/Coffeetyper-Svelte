@@ -3,7 +3,7 @@
 	"start_url": "./",
 	"icons": [
 		{
-			"src": "./static/favicon.svg",
+			"src": "./static/icon.svg",
 			"purpose": "maskable any",
 			"sizes": "any"
 		}

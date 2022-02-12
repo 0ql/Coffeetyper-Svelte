@@ -1,5 +1,5 @@
 import App from './App.svelte'
-import { sendNotification } from './components/notifications'
+import { sendNotification } from './components/ts/notifications'
 import { loadFont } from './font'
 import { template } from './store'
 import { loadTheme } from './theme'

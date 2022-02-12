@@ -15,6 +15,8 @@
     "@windicss/plugin-scrollbar": "^1.2.3",
     "postcss-load-config": "^3.1.0",
     "postcss-windicss": "^1.0.0",
+    "prettier": "^2.5.1",
+    "prettier-plugin-svelte": "^2.6.0",
     "svelte": "^3.37.0",
     "svelte-check": "^2.1.0",
     "svelte-preprocess": "^4.7.2",

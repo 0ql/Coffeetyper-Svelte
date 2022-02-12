@@ -1,5 +1,5 @@
 import { get } from 'svelte/store'
-import { settings } from '../store'
+import { settings } from '../../store'
 import { sendNotification } from './notifications'
 
 export const load1ktxtfile = async (): Promise<string[]> => {

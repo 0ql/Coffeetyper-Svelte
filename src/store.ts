@@ -2,11 +2,11 @@ import { get, writable } from 'svelte/store'
 import type { Writable } from 'svelte/store'
 import { loadFont } from './font'
 import { loadTheme } from './theme'
-import { cacheCssFileAndFonts } from './components/settings'
+import { cacheCssFileAndFonts } from './lib/cache'
 
 export const cleanLocalstorage = () => {
-	localStorage.removeItem('1kfile')
-	localStorage.removeItem('themeList')
+  localStorage.removeItem('1kfile')
+  localStorage.removeItem('themeList')
 }
 
 export const fixBwithA = <T>(a: T, b: T): T => {
@@ -18,7 +18,7 @@ export const fixBwithA = <T>(a: T, b: T): T => {
 }
 
 const loadSettingsFormLocalStorage = (): Writable<Settings> => {
-	cleanLocalstorage()
+  cleanLocalstorage()
   const res = localStorage.getItem('settings')
   if (res !== null) {
     let settings: Settings = JSON.parse(res)
@@ -40,26 +40,26 @@ export type Theme = {
 }
 
 export type TextGenerationSettings = {
-	set: 'custom' | 'preset' | 'api',
+  set: 'custom' | 'preset' | 'api'
   preSet: string // funny pun
-	customTxT: string
-	filters: {
-		blacklist: string[],
-		whitelist: string[],
-		casing: 'default' | 'lowercase' | 'uppercase' | 'random' | 'wordBeginning',
-	}
+  customTxT: string
+  filters: {
+    blacklist: string[]
+    whitelist: string[]
+    casing: 'default' | 'lowercase' | 'uppercase' | 'random' | 'wordBeginning'
+  }
 }
 
 export type Settings = {
   opened: boolean
   modeName: Modes
   showToolTips: boolean
-	words: string
+  words: string
   mode: {
     time: number
     words?: number
-  },
-	gen: TextGenerationSettings
+  }
+  gen: TextGenerationSettings
   keybindings: {
     leader: {
       key: string
@@ -74,6 +74,7 @@ export type Settings = {
     family: string
     theme: Theme
     textBox: {
+      mode: 'classic' | 'speed'
       fontSize: string
       spaceWidth: string
       width: string
@@ -103,22 +104,22 @@ export type Settings = {
 export const template: Settings = {
   opened: false,
   modeName: 'countdown',
-	words: '250',
-	gen: {
-		set: 'preset',
-		preSet: 'top 1k',
-		customTxT: '',
-		filters: {
-			blacklist: [],
-			whitelist: [],
-			casing: 'default',
-		}
-	},
+  words: '250',
+  gen: {
+    set: 'preset',
+    preSet: 'top 1k',
+    customTxT: '',
+    filters: {
+      blacklist: [],
+      whitelist: [],
+      casing: 'default',
+    },
+  },
   showToolTips: true,
   mode: { time: 60, words: 30 },
   keybindings: {
     leader: {
-			key: 'Tab',
+      key: 'Tab',
       pressed: false,
     },
     reset: 'r',
@@ -128,6 +129,7 @@ export const template: Settings = {
   },
   cosmetics: {
     textBox: {
+      mode: 'classic',
       width: '65%',
       lines: '3',
       letterSpacing: '0.1rem',
@@ -207,16 +209,21 @@ export const runState: Writable<RunState> = writable({
   overTime: [],
 })
 
-export type WordT = {
+export type Letters = {
 	active: boolean
 	correct: boolean
 	letter: string
 }[]
 
-export type TextArr = WordT[]
+export type Word = {
+	wpm: number
+	spm: number
+	tstart: number
+	tend: number
+	duration: number
+	letters: Letters 
+}
 
+export type TextArr = Word[]
 // Stores all info about the letters (letters, colors, errors etc.)
 export const textArray: Writable<TextArr> = writable([])
-
-
-

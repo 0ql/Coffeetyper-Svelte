@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly } from "svelte/transition";
-	import { notifications } from "./notifications";
+	import { notifications } from "./ts/notifications";
 </script>
 
 <div class="z-2 p-5 absolute right-0 w-1/6">
