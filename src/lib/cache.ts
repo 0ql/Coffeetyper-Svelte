@@ -8,6 +8,7 @@ const cacheFiles = () => {
 			'./manifest.json',
       './static/1000.json',
       './static/favicon.ico',
+      './static/icon.svg',
       './static/fonts.json',
       './assets/index.js',
       './assets/chunk.js',
