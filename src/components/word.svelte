@@ -37,7 +37,7 @@
       {#if letterObj.letter === ' '}
         <div style="width: {$settings.cosmetics.textBox.spaceWidth};" />
 			{:else if $incorrectLettersMapWritable.has(letterObj.letter)}
-				<div class="bg-red-400 bg-opacity-20">{letterObj.letter}</div>
+				<div class="bg-red-400 bg-opacity-8">{letterObj.letter}</div>
       {:else}
         {letterObj.letter}
       {/if}
