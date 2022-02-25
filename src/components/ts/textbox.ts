@@ -233,35 +233,44 @@ const handleKeyDown = async (e: KeyboardEvent) => {
     }
   }
 
-	if (currentWord === 0 && currentWordLetter === 0 && s.cosmetics.textBox.mode === 'speed') {
-		// set tstart now on initial input
-		ta[currentWord].tstart = Date.now()
-	}
+  if (
+    currentWord === 0 &&
+    currentWordLetter === 0 &&
+    s.cosmetics.textBox.mode === 'speed'
+  ) {
+    // set tstart now on initial input
+    ta[currentWord].tstart = Date.now()
+  }
 
   // update Array
   ta[currentWord].letters[currentWordLetter].active = false
 
   currentWordLetter++
 
-
   if (
     s.cosmetics.textBox.mode === 'speed' &&
     ta[currentWord].letters[currentWordLetter].letter === ' '
   ) {
-		ta[currentWord].tend = Date.now()
-		ta[currentWord].duration = ta[currentWord].tend - ta[currentWord].tstart
-		let correctLettersInCurrentWord = 0
-		ta[currentWord].letters.forEach(l => {
-			if (l.correct) correctLettersInCurrentWord++
-		})
-		ta[currentWord].wpm = parseFloat(((correctLettersInCurrentWord / 5) / (ta[currentWord].duration / 60000)).toFixed(2))
+    ta[currentWord].tend = Date.now()
+    ta[currentWord].duration = ta[currentWord].tend - ta[currentWord].tstart
+    let correctLettersInCurrentWord = 0
+    ta[currentWord].letters.forEach((l) => {
+      if (l.correct) correctLettersInCurrentWord++
+    })
+    ta[currentWord].wpm = parseFloat(
+      (
+        correctLettersInCurrentWord /
+        5 /
+        (ta[currentWord].duration / 60000)
+      ).toFixed(2)
+    )
     currentWord++
     currentWordLetter = 0
     document.getElementById('box').scrollBy({
       top: remToPx(parseFloat(s.cosmetics.textBox.lineHeight)),
       behavior: 'smooth',
     })
-		ta[currentWord].tstart = Date.now()
+    ta[currentWord].tstart = Date.now()
   }
 
   if (
@@ -368,26 +377,26 @@ const newText = async () => {
   textArray.set(
     txt.split(' ').map((word: string, i: number): Word => {
       const letters: Letters = word.split('').map((letter, ii: number) => {
-				return {
-					letter: letter,
-					correct: null,
-					active: i === 0 && ii === 0 ? true : false,
-				}
+        return {
+          letter: letter,
+          correct: null,
+          active: i === 0 && ii === 0 ? true : false,
+        }
       })
-			letters.push({
-				letter: ' ',
-				correct: null,
-				active: false,
-			})
+      letters.push({
+        letter: ' ',
+        correct: null,
+        active: false,
+      })
 
       return {
-				wpm: null,
-				spm: null,
-				tstart: null,
-				tend: null,
-				duration: null,
-				letters: letters
-			}
+        wpm: null,
+        spm: null,
+        tstart: null,
+        tend: null,
+        duration: null,
+        letters: letters,
+      }
     })
   )
 }

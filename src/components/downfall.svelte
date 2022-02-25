@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-	import { sendNotification } from './ts/notifications';
-	const el = document.getElementById('box')
-	if (el) el.innerHTML = ''
+  import { sendNotification } from './ts/notifications'
+  const el = document.getElementById('box')
+  if (el) el.innerHTML = ''
 
   let map: Record<string, { letter: string; x: number; y: number }[]> = {}
 
@@ -27,20 +27,20 @@
     }
   }
 
-	let i1, i2
+  let i1, i2
 
   onMount(() => {
     i1 = setInterval(() => {
       for (let key of Object.keys(map)) {
         for (let char of map[key]) {
-					if (char.y > window.innerHeight) {
-						sendNotification({
-							type: 'info',
-							content: 'Game Over'
-						})
-						clearInterval(i1)
-						clearInterval(i2)
-					}
+          if (char.y > window.innerHeight) {
+            sendNotification({
+              type: 'info',
+              content: 'Game Over',
+            })
+            clearInterval(i1)
+            clearInterval(i2)
+          }
           char.y += 2
         }
       }

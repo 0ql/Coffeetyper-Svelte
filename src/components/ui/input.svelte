@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let value: any = "",
-    placeholder: string = "";
+  export let value: any = '',
+    placeholder: string = ''
 </script>
 
 <input

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { runState, settings } from "../store";
+  import { runState, settings } from '../store'
 </script>
 
 <div

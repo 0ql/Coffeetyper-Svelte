@@ -72,7 +72,7 @@
         {#each $textArray as word, i}
           {#if $settings.cosmetics.textBox.mode === 'speed'}
             <div
-              class="flex text-[var(--sub-color)] word"
+              class="text-justify flex text-[var(--sub-color)] word"
               style="height: {$settings.cosmetics.textBox
                 .lineHeight}; margin-top: {i === 0 ? topMargin : 0}px;"
             >

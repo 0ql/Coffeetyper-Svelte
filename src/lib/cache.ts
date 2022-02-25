@@ -1,11 +1,11 @@
-import { getFromLocalStorage, saveToLocalStorage } from "./util"
-import { template } from "../store"
+import { getFromLocalStorage, saveToLocalStorage } from './util'
+import { template } from '../store'
 
 const cacheFiles = () => {
   caches.open('main').then((cache) => {
     return cache.addAll([
       './',
-			'./manifest.json',
+      './manifest.json',
       './static/1000.json',
       './static/favicon.ico',
       './static/icon.svg',

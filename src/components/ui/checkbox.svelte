@@ -1,9 +1,9 @@
 <script lang="ts">
-  export let checked: boolean;
+  export let checked: boolean
 
   const onClick = (): void => {
-    checked = !checked;
-  };
+    checked = !checked
+  }
 </script>
 
 <div

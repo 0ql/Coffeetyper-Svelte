@@ -10,7 +10,7 @@
   import { remToPx } from './lib/util'
   import { checkCacheAgeAndRenew } from './lib/cache'
   import Results from './components/results.svelte'
-import Downfall from './components/downfall.svelte'
+  import Downfall from './components/downfall.svelte'
 
   const mouseMoved = (e: MouseEvent) => {
     const s = get(settings)
@@ -76,17 +76,13 @@ import Downfall from './components/downfall.svelte'
       </div>
     {/if}
 
-
-		{#if $settings.cosmetics.textBox.mode === 'downfall'}
-			<Downfall />
-		{:else}
-			{#if !$runState.ended}
-				<Textbox />
-			{:else}
-				<Results />
-			{/if}
-		{/if}
-		
+    {#if $settings.cosmetics.textBox.mode === 'downfall'}
+      <Downfall />
+    {:else if !$runState.ended}
+      <Textbox />
+    {:else}
+      <Results />
+    {/if}
   </div>
 </main>
 

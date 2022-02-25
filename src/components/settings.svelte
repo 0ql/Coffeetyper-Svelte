@@ -13,7 +13,6 @@
 
   let fonts: string[]
   let newName: string
-
   ;(async () => {
     fonts = await getFonts()
   })()
@@ -138,7 +137,9 @@
 
         <div class="mt-3 col-span-4">Textbox</div>
 
-        <Tooltip hoverText="In 'Speed' Mode at least 6 lines are recommended. Both 'Speed' and 'Downfall' are experimental.">
+        <Tooltip
+          hoverText="In 'Speed' Mode at least 6 lines are recommended. Both 'Speed' and 'Downfall' are experimental."
+        >
           <div>
             <div class="text-xs">Mode</div>
             <Select
@@ -147,7 +148,7 @@
               bind:value={$settings.cosmetics.textBox.mode}
             >
               <option value="classic">Classic</option>
-							<option value="downfall">Downfall</option>
+              <option value="downfall">Downfall</option>
               <option value="speed">Speed</option>
             </Select>
           </div>
@@ -212,11 +213,11 @@
           <div class="col-span-2">
             <div class="text-xs">Presets</div>
             <Select class="h-10 w-full mt-2" bind:value={$settings.gen.preSet}>
-							{#if $settings.gen.set === 'api'}
-								<option value="wikipedia">Wikipedia</option>
-							{:else}
-								<option value="top 1k">Top 1k words english</option>
-							{/if}
+              {#if $settings.gen.set === 'api'}
+                <option value="wikipedia">Wikipedia</option>
+              {:else}
+                <option value="top 1k">Top 1k words english</option>
+              {/if}
             </Select>
           </div>
         {:else if $settings.gen.set === 'custom'}

@@ -210,20 +210,38 @@ export const runState: Writable<RunState> = writable({
 })
 
 export type Letters = {
-	active: boolean
-	correct: boolean
-	letter: string
+  active: boolean
+  correct: boolean
+  letter: string
 }[]
 
 export type Word = {
-	wpm: number
-	spm: number
-	tstart: number
-	tend: number
-	duration: number
-	letters: Letters 
+  wpm: number
+  spm: number
+  tstart: number
+  tend: number
+  duration: number
+  letters: Letters
 }
 
 export type TextArr = Word[]
 // Stores all info about the letters (letters, colors, errors etc.)
 export const textArray: Writable<TextArr> = writable([])
+
+export const incorrectLettersMapWritable: Writable<Map<string, boolean>> =
+  writable(new Map())
+
+textArray.subscribe((arr) => {
+  incorrectLettersMapWritable.update((mp: Map<string, boolean>) => {
+    for (let word of arr) {
+      for (let letter of word.letters) {
+        if (letter.correct === false) {
+          mp.set(letter.letter, true)
+        } else if (mp.has(letter.letter) && letter.correct === true) {
+          mp.delete(letter.letter)
+        }
+      }
+    }
+    return mp
+  })
+})
