@@ -6,13 +6,18 @@
 		"dev": "vite",
 		"build": "vite build",
 		"serve": "vite preview",
-		"check": "svelte-check --tsconfig ./tsconfig.json"
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"prepare": "husky install"
+	},
+	"lint-staged": {
+		"**/*": "prettier --write --ignore-unknown"
 	},
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "^1.0.0-next.11",
 		"@tsconfig/svelte": "^2.0.1",
 		"@windicss/plugin-animations": "^1.0.9",
 		"@windicss/plugin-scrollbar": "^1.2.3",
+		"husky": "^7.0.4",
 		"postcss-load-config": "^3.1.0",
 		"postcss-windicss": "^1.0.0",
 		"prettier": "^2.5.1",
