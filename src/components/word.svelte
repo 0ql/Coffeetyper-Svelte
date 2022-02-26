@@ -5,24 +5,11 @@
   import Caret from './caret.svelte'
   export let word: Word
   export let caret: boolean = true
-
-	// word active?
-	let active = false
-	$: {
-		for (let letter of word.letters) {
-			if (letter.active) {
-				active = true
-				break;
-			} else {
-				active = false
-			}
-		}
-	}
 </script>
 
 <div
   class="inline-block inline-flex text-[var(--sub-color)] rounded-lg"
-  style="height: {$settings.cosmetics.textBox.lineHeight}; background-color: {active ? '#ffffff08' : '#0000'};"
+  style="height: {$settings.cosmetics.textBox.lineHeight}; background-color: {word.active ? '#ffffff08' : '#0000'};"
 >
   {#each word.letters as letterObj}
     <!-- Caret -->
@@ -36,7 +23,7 @@
     >
       {#if letterObj.letter === ' '}
         <div style="width: {$settings.cosmetics.textBox.spaceWidth};" />
-			{:else if $incorrectLettersMapWritable.has(letterObj.letter)}
+			{:else if word.redHighlight && $incorrectLettersMapWritable.has(letterObj.letter)}
 				<div class="bg-red-400 bg-opacity-8">{letterObj.letter}</div>
       {:else}
         {letterObj.letter}

@@ -221,6 +221,8 @@ export type Word = {
   tstart: number
   tend: number
   duration: number
+	active: boolean
+	redHighlight: boolean
   letters: Letters
 }
 
@@ -233,14 +235,23 @@ export const incorrectLettersMapWritable: Writable<Map<string, boolean>> =
 
 textArray.subscribe((arr) => {
   incorrectLettersMapWritable.update((mp: Map<string, boolean>) => {
+		let redHighlight = false
     for (let word of arr) {
+			let active = false
       for (let letter of word.letters) {
         if (letter.correct === false) {
           mp.set(letter.letter, true)
         } else if (mp.has(letter.letter) && letter.correct === true) {
           mp.delete(letter.letter)
         }
+				
+				if (letter.active) {
+					active = true
+					redHighlight = true
+				}
       }
+			word.redHighlight = redHighlight
+			word.active = active
     }
     return mp
   })
