@@ -10,6 +10,7 @@
 	import { sendNotification } from './ts/notifications'
 	import Tooltip from './ui/tooltip.svelte'
 	import { resetRun } from './ts/textbox'
+	import { renewCache } from '../lib/cache'
 
 	let fonts: string[]
 	let newName: string
@@ -130,8 +131,7 @@
 
 				<div class="mt-3 col-span-4">Textbox</div>
 
-				<Tooltip
-					hoverText="In 'Speed' Mode at least 6 lines are recommended. Both 'Speed' and 'Downfall' are experimental.">
+				<Tooltip hoverText="'Downfall' is experimental.">
 					<div>
 						<div class="text-xs">Mode</div>
 						<Select
@@ -140,7 +140,6 @@
 							bind:value={$settings.cosmetics.textBox.mode}>
 							<option value="classic">Classic</option>
 							<option value="downfall">Downfall</option>
-							<option value="speed">Speed</option>
 						</Select>
 					</div>
 				</Tooltip>
@@ -379,10 +378,14 @@
 						bind:value={$settings.keybindings.toggleTheme} />
 				</div>
 
-				<div class="flex items-center gap-2 col-span-4 mt-3">
+				<div class="col-span-4 mt-3">Misc</div>
+
+				<div class="flex items-center gap-2 col-span-4">
 					<Checkbox bind:checked={$settings.showToolTips} />
 					<div>Show Tooltips</div>
 				</div>
+
+				<Button class="col-span-2" on:click={renewCache}>Refresh Cache</Button>
 			</div>
 		</div>
 	</div>

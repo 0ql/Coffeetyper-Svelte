@@ -74,7 +74,7 @@ export type Settings = {
 		family: string
 		theme: Theme
 		textBox: {
-			mode: 'classic' | 'speed' | 'downfall'
+			mode: 'classic' | 'downfall'
 			fontSize: string
 			spaceWidth: string
 			width: string

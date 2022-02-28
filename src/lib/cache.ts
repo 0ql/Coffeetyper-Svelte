@@ -19,6 +19,14 @@ const cacheFiles = () => {
 	})
 }
 
+export const renewCache = async () => {
+	console.log('Renewing cache...')
+	saveToLocalStorage('cacheAge', Date.now())
+	await caches.delete('main')
+	cacheFiles()
+	cacheCssFileAndFonts(template.cosmetics.family)
+}
+
 export const checkCacheAgeAndRenew = async () => {
 	const age = getFromLocalStorage('cacheAge')
 
@@ -31,11 +39,7 @@ export const checkCacheAgeAndRenew = async () => {
 
 	// renew cache if older than a day
 	if (age + 1000 * 60 * 60 * 24 < Date.now()) {
-		console.log('Renewing cache...')
-		saveToLocalStorage('cacheAge', Date.now())
-		await caches.delete('main')
-		cacheFiles()
-		cacheCssFileAndFonts(template.cosmetics.family)
+		renewCache()
 	}
 }
 

@@ -63,31 +63,9 @@
 					.lineHeight}; display: {$settings.cosmetics.textBox.mode === 'classic'
 					? 'inline-flex'
 					: ''}
-					
 				">
 				{#each $textArray as word, i}
-					{#if $settings.cosmetics.textBox.mode === 'speed'}
-						<div
-							class="text-justify flex text-[var(--sub-color)] word"
-							style="height: {$settings.cosmetics.textBox
-								.lineHeight}; margin-top: {i === 0 ? topMargin : 0}px;">
-							<div class="flex items-end w-10 text-xs">
-								{#if word.wpm}
-									{word.wpm}
-								{/if}
-							</div>
-							<div>
-								<Word {word} caret={false} />
-								{#if word.wpm}
-									<div
-										class="h-1 bg-[var(--sub-color)]"
-										style="width: {word.wpm}px" />
-								{/if}
-							</div>
-						</div>
-					{:else}
-						<Word {word} />
-					{/if}
+					<Word {word} />
 				{/each}
 			</div>
 		</div>
