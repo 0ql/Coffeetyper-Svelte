@@ -2,8 +2,22 @@ import { get } from 'svelte/store'
 import { settings } from '../../store'
 import { sendNotification } from './notifications'
 
-export const load1ktxtfile = async (): Promise<string[]> => {
-	return (await fetch('/static/1000.json')).json()
+export const loadtxtfile = async (filename: string): Promise<string[]> => {
+	const res = await fetch('./public/static/wordlists/' + filename)
+	const str = await res.text()
+	const arr: string[] = []
+	let buf: string = ''
+
+	for (let char of str) {
+		if (char !== '\n') {
+			buf += char
+		} else {
+			arr.push(buf)
+			buf = ''
+		}
+	}
+
+	return arr
 }
 
 export const wikipediaRandomPagePlainTextTopDesc =
@@ -49,11 +63,10 @@ export const createText = async (): Promise<string> => {
 
 	// first get initial text
 	if (gen.set === 'preset') {
-		switch (gen.preSet) {
-			case 'top 1k':
-				str = getRandomWordStrFromArr(await load1ktxtfile(), parseInt(S.words))
-				break
-		}
+		str = getRandomWordStrFromArr(
+			await loadtxtfile(gen.preSet),
+			parseInt(S.words)
+		)
 	} else if (gen.set === 'api') {
 		switch (gen.preSet) {
 			case 'wikipedia':

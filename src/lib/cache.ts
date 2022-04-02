@@ -6,7 +6,7 @@ const cacheFiles = () => {
 		return cache.addAll([
 			'./',
 			'./manifest.json',
-			'./static/1000.json',
+			'./static/wordlists/1000-en-common-words.txt',
 			'./static/favicon.ico',
 			'./static/icon.svg',
 			'./static/fonts.json',

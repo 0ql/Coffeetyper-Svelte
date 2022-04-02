@@ -6,7 +6,13 @@
 	import Checkbox from './ui/checkbox.svelte'
 	import Button from './ui/button.svelte'
 	import { getFromLocalStorage, saveToLocalStorage } from '../lib/util'
-	import { getFonts, randomizeSettings, saveCosmetics } from './ts/settings'
+	import {
+		getFonts,
+		loadTextFileList,
+		randomizeSettings,
+		saveCosmetics,
+		Wordlists,
+	} from './ts/settings'
 	import { sendNotification } from './ts/notifications'
 	import Tooltip from './ui/tooltip.svelte'
 	import { resetRun } from './ts/textbox'
@@ -65,7 +71,12 @@
 
 	getSavedCosmetics()
 
-	let fontsFocus: boolean = false
+	let fontsFocus = false
+	let wordlists: Wordlists = []
+
+	;(async () => {
+		wordlists = await loadTextFileList()
+	})()
 </script>
 
 {#if $settings.opened}
@@ -200,7 +211,9 @@
 							{#if $settings.gen.set === 'api'}
 								<option value="wikipedia">Wikipedia</option>
 							{:else}
-								<option value="top 1k">Top 1k words english</option>
+								{#each wordlists as list}
+									<option value={list.file}>{list.alias}</option>
+								{/each}
 							{/if}
 						</Select>
 					</div>
@@ -380,9 +393,13 @@
 
 				<div class="col-span-4 mt-3">Misc</div>
 
-				<div class="flex items-center gap-2 col-span-4">
+				<div class="flex items-center gap-2 col-span-4 text-sm">
 					<Checkbox bind:checked={$settings.showToolTips} />
 					<div>Show Tooltips</div>
+					<Checkbox bind:checked={$settings.highlighting.wrong} />
+					<div>Highlight wrongly typed letters</div>
+					<Checkbox bind:checked={$settings.highlighting.words} />
+					<div>Highlight active word</div>
 				</div>
 
 				<Button class="col-span-2" on:click={renewCache}>Refresh Cache</Button>

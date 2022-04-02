@@ -55,6 +55,10 @@ export type Settings = {
 	modeName: Modes
 	showToolTips: boolean
 	words: string
+	highlighting: {
+		words: boolean
+		wrong: boolean
+	}
 	mode: {
 		time: number
 		words?: number
@@ -105,9 +109,13 @@ export const template: Settings = {
 	opened: false,
 	modeName: 'countdown',
 	words: '250',
+	highlighting: {
+		words: true,
+		wrong: true,
+	},
 	gen: {
 		set: 'preset',
-		preSet: 'top 1k',
+		preSet: '1000-en-common-words.txt',
 		customTxT: '',
 		filters: {
 			blacklist: [],

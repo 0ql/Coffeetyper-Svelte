@@ -1,0 +1,42 @@
+[
+	{
+		"file": "1000-en-common-words.txt",
+		"alias": "1000 most common english words"
+	},
+	{
+		"file": "150-de-ieren-words.txt",
+		"alias": "150 german words ending with '-ieren'"
+	},
+	{
+		"file": "199-de-common-adjectives.txt",
+		"alias": "199 german adjectives"
+	},
+	{
+		"file": "200-de-common-adverbs.txt",
+		"alias": "200 german adverbs"
+	},
+	{
+		"file": "200-de-common-nouns.txt",
+		"alias": "200 german nouns"
+	},
+	{
+		"file": "200-de-common-verbs.txt",
+		"alias": "200 german verbs"
+	},
+	{
+		"file": "200-en-common-adjectives.txt",
+		"alias": "200 english adjectives"
+	},
+	{
+		"file": "500-de-common-words.txt",
+		"alias": "500 most common german words"
+	},
+	{
+		"file": "500-en-common-words.txt",
+		"alias": "500 most common english words"
+	},
+	{
+		"file": "9904-de-common-words&names.txt",
+		"alias": "9904 german words and names"
+	}
+]

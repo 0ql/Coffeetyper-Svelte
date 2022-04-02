@@ -4,7 +4,18 @@ import { getThemeList } from '../../theme'
 import { getFromLocalStorage, saveToLocalStorage } from '../../lib/util'
 import { cacheCssFileAndFonts } from '../../lib/cache'
 
+export type Wordlists = {
+	file: string
+	alias: string
+}[]
+
 let fonts: string[]
+
+export const loadTextFileList = async (): Promise<Wordlists> => {
+	const res = await fetch('./public/static/wordlists/_list.json')
+	const jsn = await res.json()
+	return jsn
+}
 
 export const getFonts = async (): Promise<string[]> => {
 	if (!fonts) fonts = await (await fetch('./static/fonts.json')).json()
