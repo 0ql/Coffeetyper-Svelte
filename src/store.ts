@@ -25,6 +25,11 @@ const loadSettingsFormLocalStorage = (): Writable<Settings> => {
 
 		// check if settings are up to date
 		settings = fixBwithA(template, settings)
+
+		if (settings.gen.preSet === 'top 1k') {
+			settings.gen.preSet = '1000-en-common-words.txt'
+		}
+
 		return writable(settings)
 	} else {
 		cacheCssFileAndFonts(template.cosmetics.family)
