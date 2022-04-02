@@ -12,7 +12,7 @@ export type Wordlists = {
 let fonts: string[]
 
 export const loadTextFileList = async (): Promise<Wordlists> => {
-	const res = await fetch('./public/static/wordlists/_list.json')
+	const res = await fetch('./static/wordlists/_list.json')
 	const jsn = await res.json()
 	return jsn
 }

@@ -3,7 +3,7 @@ import { settings } from '../../store'
 import { sendNotification } from './notifications'
 
 export const loadtxtfile = async (filename: string): Promise<string[]> => {
-	const res = await fetch('./public/static/wordlists/' + filename)
+	const res = await fetch('./static/wordlists/' + filename)
 	const str = await res.text()
 	const arr: string[] = []
 	let buf: string = ''
