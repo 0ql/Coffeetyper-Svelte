@@ -7,7 +7,6 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				entryFileNames: `assets/index.js`,
-				chunkFileNames: `assets/chunk.js`,
 				assetFileNames: `assets/style.[ext]`,
 			},
 		},

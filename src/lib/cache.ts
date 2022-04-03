@@ -11,7 +11,6 @@ const cacheFiles = () => {
 			'./static/icon.svg',
 			'./static/fonts.json',
 			'./assets/index.js',
-			'./assets/chunk.js',
 			'./assets/style.css',
 			'./themes/_list.json',
 			'./themes/bliss.css',
