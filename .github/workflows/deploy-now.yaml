@@ -20,11 +20,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - name: Setup Node.js 14.x
+      - name: Setup Node.js 17.x
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 17.x
       - name: Prepare project environment
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         run: npm install
