@@ -14,10 +14,10 @@
 
 	const mouseMoved = (e: MouseEvent) => {
 		const s = get(settings)
-		if (e.x < remToPx(32)) {
+		if (e.clientX < remToPx(32)) {
 			s.opened = true
 			s.cosmetics.theme.opened = false
-		} else if (e.x > window.innerWidth - remToPx(24)) {
+		} else if (e.clientX > window.innerWidth - remToPx(24)) {
 			s.opened = false
 			s.cosmetics.theme.opened = true
 		} else if (s.opened || s.cosmetics.theme.opened) {
