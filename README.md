@@ -1,5 +1,5 @@
 <p align="center" style="margin-top: 100px"><br>
-  <img src="https://raw.githubusercontent.com/0ql/Coffeetyper/master/public/static/icon.svg" width="22%"/>
+  <img src="https://raw.githubusercontent.com/0ql/Coffeetyper-Svelte/master/public/static/icon.svg" width="22%"/>
   <br>
 </p>
 
