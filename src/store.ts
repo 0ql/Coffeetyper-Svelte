@@ -9,7 +9,7 @@ export const cleanLocalstorage = () => {
 	localStorage.removeItem('themeList')
 }
 
-export const fixBwithA = <T>(a: T, b: T): T => {
+export const fixBwithA = <T extends object>(a: T, b: T): T => {
 	for (const key of Object.keys(a !== null ? a : {})) {
 		if (key in b === false) b[key] = a[key]
 		if (typeof a[key] === 'object') fixBwithA(a[key], b[key])

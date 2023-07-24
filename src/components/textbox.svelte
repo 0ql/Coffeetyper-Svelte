@@ -1,38 +1,40 @@
 <script lang="ts">
-	import { remToPx } from '../lib/util'
-	import { onMount } from 'svelte/internal'
-	import { runState, settings, textArray } from '../store'
-	import { startRun } from './ts/textbox'
-	import Word from './word.svelte'
+	import { remToPx } from "../lib/util";
+	import { onMount } from "svelte/internal";
+	import { runState, settings, textArray } from "../store";
+	import { startRun } from "./ts/textbox";
+	import Word from "./word.svelte";
 
 	onMount(async () => {
-		startRun()
-	})
+		startRun();
+	});
 
 	$: topMargin =
 		remToPx(parseFloat($settings.cosmetics.textBox.lineHeight)) *
-		(parseInt($settings.cosmetics.textBox.lines) / 2)
+		(parseInt($settings.cosmetics.textBox.lines) / 2);
 </script>
 
 <div
 	class="h-full w-full flex items-center justify-center absolute text-2xl transition-opacity duration-400 {$settings.opened ||
 	$settings.cosmetics.theme.opened
 		? ' opacity-30'
-		: ''}">
+		: ''}"
+>
 	<div class="flex-col" style="width: {$settings.cosmetics.textBox.width};">
 		<div
 			id="infobar"
 			class="flex gap-4"
-			style="padding-left: {$settings.cosmetics.textBox.caret.width}">
+			style="padding-left: {$settings.cosmetics.textBox.caret.width}"
+		>
 			<div>
 				{$settings.cosmetics.textBox.infobar.liveTime
 					? $runState.timeString
-					: ''}
+					: ""}
 			</div>
 			<div>
 				{$settings.cosmetics.textBox.infobar.liveAccuracy
-					? $runState.accuracy + '%'
-					: ''}
+					? $runState.accuracy + "%"
+					: ""}
 			</div>
 			{#if $settings.cosmetics.textBox.infobar.liveWpm}
 				<div class="flex items-end">
@@ -55,7 +57,8 @@
 				? remToPx(parseFloat($settings.cosmetics.textBox.lineHeight)) *
 				  parseInt($settings.cosmetics.textBox.lines)
 				: 0}px; padding-left: {$settings.cosmetics.textBox.caret
-				.width}; font-size: {$settings.cosmetics.textBox.fontSize};">
+				.width}; font-size: {$settings.cosmetics.textBox.fontSize};"
+		>
 			<div
 				class="flex-wrap letter"
 				style="letter-spacing: {$settings.cosmetics.textBox
@@ -63,7 +66,8 @@
 					.lineHeight}; display: {$settings.cosmetics.textBox.mode === 'classic'
 					? 'inline-flex'
 					: ''}
-				">
+				"
+			>
 				{#each $textArray as word, i}
 					<Word {word} />
 				{/each}

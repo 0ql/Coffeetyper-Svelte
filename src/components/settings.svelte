@@ -1,121 +1,127 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition'
-	import { fixBwithA, refreshCosmetics, settings, template } from '../store'
-	import Input from './ui/input.svelte'
-	import Select from './ui/select.svelte'
-	import Checkbox from './ui/checkbox.svelte'
-	import Button from './ui/button.svelte'
-	import { getFromLocalStorage, saveToLocalStorage } from '../lib/util'
+	import { fly } from "svelte/transition";
+	import { fixBwithA, refreshCosmetics, settings, template } from "../store";
+	import Input from "./ui/input.svelte";
+	import Select from "./ui/select.svelte";
+	import Checkbox from "./ui/checkbox.svelte";
+	import Button from "./ui/button.svelte";
+	import { getFromLocalStorage, saveToLocalStorage } from "../lib/util";
 	import {
 		getFonts,
 		loadTextFileList,
 		randomizeSettings,
 		saveCosmetics,
 		type Wordlists,
-	} from './ts/settings'
-	import { sendNotification } from './ts/notifications'
-	import Tooltip from './ui/tooltip.svelte'
-	import { resetRun } from './ts/textbox'
-	import { renewCache } from '../lib/cache'
+	} from "./ts/settings";
+	import { sendNotification } from "./ts/notifications";
+	import Tooltip from "./ui/tooltip.svelte";
+	import { resetRun } from "./ts/textbox";
+	import { renewCache } from "../lib/cache";
 
-	let fonts: string[]
-	let newName: string
-	;(async () => {
-		fonts = await getFonts()
-	})()
+	let fonts: string[];
+	let newName: string;
+	(async () => {
+		fonts = await getFonts();
+	})();
 
-	let savedCosmetics: any = {}
+	let savedCosmetics: any = {};
 	const getSavedCosmetics = () => {
-		let c = getFromLocalStorage('savedCosmetics')
-		if (c === null) c = {}
+		let c = getFromLocalStorage("savedCosmetics");
+		if (c === null) c = {};
 
-		savedCosmetics = c
-	}
+		savedCosmetics = c;
+	};
 
 	const changeCosmetics = (name: string) => {
-		const c = getFromLocalStorage('savedCosmetics')[name]
+		const c = getFromLocalStorage("savedCosmetics")[name];
 		settings.update((s) => {
-			s.cosmetics = c
-			return s
-		})
-		refreshCosmetics()
-	}
+			s.cosmetics = c;
+			return s;
+		});
+		refreshCosmetics();
+	};
 
 	const deleteSetting = (name: string) => {
-		let s = getFromLocalStorage('savedCosmetics')
-		delete s[name]
-		saveToLocalStorage('savedCosmetics', s)
-		getSavedCosmetics()
-	}
+		let s = getFromLocalStorage("savedCosmetics");
+		delete s[name];
+		saveToLocalStorage("savedCosmetics", s);
+		getSavedCosmetics();
+	};
 
 	const exportCosmetics = (name: string) => {
-		const data = JSON.stringify(getFromLocalStorage('savedCosmetics')[name])
-		navigator.clipboard.writeText(data)
+		const data = JSON.stringify(getFromLocalStorage("savedCosmetics")[name]);
+		navigator.clipboard.writeText(data);
 		sendNotification({
-			content: 'Copied to Clipboard!',
-			type: 'info',
-		})
-	}
+			content: "Copied to Clipboard!",
+			type: "info",
+		});
+	};
 
-	let imported = ''
+	let imported = "";
 	const importCosmetics = () => {
-		const data = JSON.parse(imported)
-		$settings.cosmetics = fixBwithA($settings.cosmetics, data)
-		refreshCosmetics()
-	}
+		const data = JSON.parse(imported);
+		$settings.cosmetics = fixBwithA($settings.cosmetics, data);
+		refreshCosmetics();
+	};
 
 	const resetToDefault = () => {
-		$settings = template
-		refreshCosmetics()
-	}
+		$settings = template;
+		refreshCosmetics();
+	};
 
-	getSavedCosmetics()
+	getSavedCosmetics();
 
-	let fontsFocus = false
-	let wordlists: Wordlists = []
+	let fontsFocus = false;
+	let wordlists: Wordlists = [];
 
-	;(async () => {
-		wordlists = await loadTextFileList()
-	})()
+	(async () => {
+		wordlists = await loadTextFileList();
+	})();
 </script>
 
 {#if $settings.opened}
 	<div
 		transition:fly={{ duration: 400, x: -100 }}
 		style="direction: rtl;"
-		class="fixed h-full z-2 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-thumb-current scrollbar-thumb-rounded scrollbar-track-transparent w-128">
+		class="fixed h-full z-2 overflow-x-hidden overflow-y-scroll scrollbar scrollbar-rounded scrollbar-track-color-transparent scrollbar-thumb-color-current w-128"
+	>
 		<div class="pl-5 py-5 inline" style="direction: ltr;">
 			<div class="grid grid-cols-4 auto-rows-auto gap-3 p-3">
-				<div class="text-primary font-bold text-xl">Settings</div>
-				<div
-					class="text-xs mt-2 cursor-pointer"
-					on:click={() =>
-						window.open('https://github.com/0ql/Coffeetyper', '_blank')}>
-					Github
-				</div>
+				<h1 class="font-bold text-xl flex items-center gap-6">
+					Settings
+					<a
+						class="text-xs text-current"
+						href="https://github.com/0ql/Coffeetyper"
+						target="_blank"
+					>
+						Github
+					</a>
+				</h1>
 
-				<div class="mt-5 col-span-4">Font Family</div>
+				<h2 class="text-base font-normal m-0 col-span-4">Font Family</h2>
 
 				<Select
-					class="col-span-4 h-10 w-full"
+					class="col-span-4 w-full"
 					bind:value={$settings.cosmetics.family}
 					on:change={refreshCosmetics}
 					on:mouseenter={() => {
-						fontsFocus = true
-					}}>
+						fontsFocus = true;
+					}}
+				>
 					{#if fonts && fontsFocus}
 						{#each fonts as font}
 							<option value={font}>{font}</option>
 						{/each}
 					{:else}
 						<option value={$settings.cosmetics.family}
-							>{$settings.cosmetics.family}</option>
+							>{$settings.cosmetics.family}</option
+						>
 					{/if}
 				</Select>
 
 				<div class="col-span-2">
 					<div>Mode</div>
-					<Select class="mt-3 h-10 w-full" bind:value={$settings.modeName}>
+					<Select class="mt-3 w-full" bind:value={$settings.modeName}>
 						<option value="timed">Timed</option>
 						<option value="countdown">Countdown</option>
 						<option value="countup">Countup</option>
@@ -124,25 +130,25 @@
 				<div>
 					<div>Sec</div>
 					<Input
-						class="mt-3 h-10 text-center w-full"
-						bind:value={$settings.mode.time} />
+						class="mt-3 text-center w-full"
+						bind:value={$settings.mode.time}
+					/>
 				</div>
 				<div>
 					<div>Words</div>
-					<Input
-						class="mt-3 h-10 text-center w-full"
-						bind:value={$settings.words} />
+					<Input class="mt-3 text-center w-full" bind:value={$settings.words} />
 				</div>
 
-				<div class="mt-3 col-span-4">Textbox</div>
+				<h2 class="text-base m-0 mt-3 font-normal col-span-4">Textbox</h2>
 
 				<Tooltip hoverText="'Downfall' is experimental.">
 					<div>
 						<div class="text-xs">Mode</div>
 						<Select
-							class="h-10 w-full mt-2"
+							class="w-full mt-2"
 							on:change={resetRun}
-							bind:value={$settings.cosmetics.textBox.mode}>
+							bind:value={$settings.cosmetics.textBox.mode}
+						>
 							<option value="classic">Classic</option>
 							<option value="downfall">Downfall</option>
 						</Select>
@@ -152,57 +158,65 @@
 					<div class="text-xs">Width</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.width} />
+						bind:value={$settings.cosmetics.textBox.width}
+					/>
 				</div>
 				<div>
 					<div class="text-xs">Lines</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.lines} />
+						bind:value={$settings.cosmetics.textBox.lines}
+					/>
 				</div>
 				<div>
 					<div class="text-xs">Line Height</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.lineHeight} />
+						bind:value={$settings.cosmetics.textBox.lineHeight}
+					/>
 				</div>
 				<div>
 					<div class="text-xs">Letter Spacing</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.letterSpacing} />
+						bind:value={$settings.cosmetics.textBox.letterSpacing}
+					/>
 				</div>
 
 				<div>
 					<div class="text-xs">Font Size</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.fontSize} />
+						bind:value={$settings.cosmetics.textBox.fontSize}
+					/>
 				</div>
 				<div>
 					<div class="text-xs">Space Width</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.spaceWidth} />
+						bind:value={$settings.cosmetics.textBox.spaceWidth}
+					/>
 				</div>
 				<div class="col-span-1" />
 
-				<div class="col-span-4 mt-3">Text Generation</div>
+				<h2 class="text-base m-0 mt-3 font-normal col-span-4">
+					Text Generation
+				</h2>
 
 				<div class="col-span-2">
 					<div class="text-xs">Choose text source</div>
-					<Select class="h-10 w-full mt-2" bind:value={$settings.gen.set}>
+					<Select class="w-full mt-2" bind:value={$settings.gen.set}>
 						<option value="preset">Preset</option>
 						<option value="api">Api</option>
 						<option value="custom">Custom</option>
 					</Select>
 				</div>
 
-				{#if $settings.gen.set === 'preset' || $settings.gen.set === 'api'}
+				{#if $settings.gen.set === "preset" || $settings.gen.set === "api"}
 					<div class="col-span-2">
 						<div class="text-xs">Presets</div>
-						<Select class="h-10 w-full mt-2" bind:value={$settings.gen.preSet}>
-							{#if $settings.gen.set === 'api'}
+						<Select class="w-full mt-2" bind:value={$settings.gen.preSet}>
+							{#if $settings.gen.set === "api"}
 								<option value="wikipedia">Wikipedia</option>
 							{:else}
 								{#each wordlists as list}
@@ -211,33 +225,36 @@
 							{/if}
 						</Select>
 					</div>
-				{:else if $settings.gen.set === 'custom'}
+				{:else if $settings.gen.set === "custom"}
 					<div class="col-span-2">
 						<div class="text-xs">Custom Text</div>
 						<Input
 							class="w-full mt-2"
 							placeholder="Input custom text here"
-							bind:value={$settings.gen.customTxT} />
+							bind:value={$settings.gen.customTxT}
+						/>
 					</div>
 				{/if}
 
-				<div class="col-span-4 text-sm">Text Filters</div>
+				<h3 class="col-span-4 font-normal m-0 text-sm">Text Filters</h3>
 
 				<div class="col-span-4 text-xs">Casing</div>
 				<Select
-					class="col-span-4 h-10 w-full"
-					bind:value={$settings.gen.filters.casing}>
+					class="col-span-4 w-full"
+					bind:value={$settings.gen.filters.casing}
+				>
 					<option value="default">Default</option>
 					<option value="lowercase">Lowercase</option>
 					<option value="uppercase">Uppercase</option>
 					<option value="random">Random</option>
 					<option value="wordBeginning"
-						>Uppercase first letter of every Word</option>
+						>Uppercase first letter of every Word</option
+					>
 				</Select>
 
-				<div class="col-span-2 mt-3">Caret</div>
+				<h3 class="col-span-2 text-base font-normal m-0 mt-3">Caret</h3>
 
-				<div class="col-span-2 mt-3">Infobar</div>
+				<h3 class="col-span-2 text-base font-normal m-0 mt-3">Infobar</h3>
 
 				<div class="flex gap-2">
 					<Checkbox bind:checked={$settings.cosmetics.textBox.caret.rounded} />
@@ -251,13 +268,15 @@
 
 				<div class="flex gap-2">
 					<Checkbox
-						bind:checked={$settings.cosmetics.textBox.infobar.liveAccuracy} />
+						bind:checked={$settings.cosmetics.textBox.infobar.liveAccuracy}
+					/>
 					<div class="text-xs">L. Accuracy</div>
 				</div>
 
 				<div class="flex gap-2">
 					<Checkbox
-						bind:checked={$settings.cosmetics.textBox.infobar.liveLpm} />
+						bind:checked={$settings.cosmetics.textBox.infobar.liveLpm}
+					/>
 					<div class="text-xs">Live SPM</div>
 				</div>
 
@@ -265,77 +284,100 @@
 					<div class="text-xs">Speed in ms</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.caret.duration} />
+						bind:value={$settings.cosmetics.textBox.caret.duration}
+					/>
 				</Tooltip>
 
 				<div>
 					<div class="text-xs">Width</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.textBox.caret.width} />
+						bind:value={$settings.cosmetics.textBox.caret.width}
+					/>
 				</div>
 
 				<div class="flex gap-2">
 					<Checkbox
-						bind:checked={$settings.cosmetics.textBox.infobar.liveWpm} />
+						bind:checked={$settings.cosmetics.textBox.infobar.liveWpm}
+					/>
 					<div class="text-xs">Live WPM</div>
 				</div>
 
 				<div class="flex gap-2">
 					<Checkbox
-						bind:checked={$settings.cosmetics.textBox.infobar.liveTime} />
+						bind:checked={$settings.cosmetics.textBox.infobar.liveTime}
+					/>
 					<div class="text-xs">Live Time</div>
 				</div>
 
-				<div class="col-span-4 mt-3">Randomize Settings</div>
+				<h3 class="col-span-full text-base font-normal m-0 mt-3">Randomize Settings</h3>
 
 				<Button class="col-span-2" on:click={randomizeSettings}
-					>Randomize</Button>
+					>Randomize</Button
+				>
 				<Button class="col-span-2" on:click={resetToDefault}
-					>Reset to Default</Button>
+					>Reset to Default</Button
+				>
 
-				<div class="col-span-4 mt-3">Background Image</div>
+				<h3 class="col-span-2 text-base font-normal m-0 mt-3">
+					Background Image
+				</h3>
 
 				<div class="col-span-3">
 					<div class="text-xs">Url</div>
 					<Input
 						class="mt-2 w-full"
 						placeholder="Paste url here"
-						bind:value={$settings.cosmetics.background.bgImg} />
+						bind:value={$settings.cosmetics.background.bgImg}
+					/>
 				</div>
 				<div class="col-span-1">
 					<div class="text-xs">Opacity</div>
 					<Input
 						class="mt-2 text-center w-full"
-						bind:value={$settings.cosmetics.background.opacity} />
+						bind:value={$settings.cosmetics.background.opacity}
+					/>
 				</div>
 
-				<div class="col-span-4 mt-3">Save Cosmetics</div>
+				<h3 class="col-span-full text-base font-normal m-0 mt-3">
+					Save Cosmetics
+				</h3>
+
 				<div class="text-xs col-span-4">Name</div>
 				<Input
 					class="col-span-3 w-full"
 					placeholder={$settings.cosmetics.theme.name}
-					bind:value={newName} />
+					bind:value={newName}
+				/>
 				<Button
 					on:click={() => {
-						saveCosmetics(newName)
-						getSavedCosmetics()
-					}}>Save</Button>
+						saveCosmetics(newName);
+						getSavedCosmetics();
+					}}>Save</Button
+				>
 
-				<div class="col-span-4 mt-3">Import Cosmetics</div>
+				<h3 class="col-span-full text-base font-normal m-0 mt-3">
+					Import Cosmetics
+				</h3>
+
 				<div class="text-xs col-span-4">Paste</div>
 				<Input
 					placeholder="Paste settings here"
 					class="col-span-3 w-full"
-					bind:value={imported} />
+					bind:value={imported}
+				/>
 				<Button on:click={importCosmetics}>Load</Button>
 
-				<div class="col-span-4 mt-3">Saved Cosmetics</div>
+				<h3 class="col-span-full text-base font-normal m-0 mt-3">
+					Saved Cosmetics
+				</h3>
+
 				{#each Object.keys(savedCosmetics) as name}
 					<div class="col-span-4 text-sm">{name}</div>
 					<Button on:click={() => changeCosmetics(name)}>Load</Button>
 					<Button class="col-span-2" on:click={() => exportCosmetics(name)}
-						>Copy to clipboard</Button>
+						>Copy to clipboard</Button
+					>
 					<Button on:click={() => deleteSetting(name)}>Delete</Button>
 				{/each}
 				{#if Object.keys(savedCosmetics).length === 0}
@@ -350,13 +392,14 @@
 				</Tooltip>
 			> -->
 
-				<div class="col-span-4 mt-3">Keybindings</div>
+				<h3 class="col-span-full text-base font-normal m-0 mt-3">Keybindings</h3>
 
 				<div>
 					<div class="text-sm">Leaderkey</div>
 					<Input
 						class="mt-2 w-full"
-						bind:value={$settings.keybindings.leader.key} />
+						bind:value={$settings.keybindings.leader.key}
+					/>
 				</div>
 
 				<div>
@@ -368,24 +411,27 @@
 					<div class="text-sm">Randomize</div>
 					<Input
 						class="mt-2 w-full"
-						bind:value={$settings.keybindings.randomizeSettings} />
+						bind:value={$settings.keybindings.randomizeSettings}
+					/>
 				</div>
 
 				<div>
 					<div class="text-sm">Settings</div>
 					<Input
 						class="mt-2 w-full"
-						bind:value={$settings.keybindings.toggleSettings} />
+						bind:value={$settings.keybindings.toggleSettings}
+					/>
 				</div>
 
 				<div>
 					<div class="text-sm">Themes</div>
 					<Input
 						class="mt-2 w-full"
-						bind:value={$settings.keybindings.toggleTheme} />
+						bind:value={$settings.keybindings.toggleTheme}
+					/>
 				</div>
 
-				<div class="col-span-4 mt-3">Misc</div>
+				<h3 class="col-span-full text-base font-normal m-0 mt-3">Misc</h3>
 
 				<div class="flex items-center gap-2 col-span-4 text-sm">
 					<Checkbox bind:checked={$settings.showToolTips} />

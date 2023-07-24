@@ -325,7 +325,7 @@ export const resetRun = async () => {
 	})
 }
 
-let autoScrollInterval: NodeJS.Timer
+let autoScrollInterval: any
 
 export const startEventListener = () => {
 	autoScrollInterval = setInterval(onInterval, 200)

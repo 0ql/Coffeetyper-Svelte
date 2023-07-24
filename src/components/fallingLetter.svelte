@@ -1,16 +1,16 @@
 <script lang="ts">
-	export let letter: string
-	export let amount: number
+	export let letter: string;
+	export let amount: number;
 
-	let q = []
-	let lastAmount: number = 0
+	let q = [];
+	let lastAmount: number = 0;
 
 	$: {
 		if (amount < lastAmount) {
-			lastAmount = amount
-			q.pop()
+			lastAmount = amount;
+			q.pop();
 		} else if (amount > lastAmount) {
-			q.push(letter)
+			q.push(letter);
 		}
 	}
 </script>

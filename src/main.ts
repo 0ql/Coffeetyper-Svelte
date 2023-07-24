@@ -1,3 +1,5 @@
+import 'uno.css'
+import './global.css'
 import App from './App.svelte'
 import { sendNotification } from './components/ts/notifications'
 import { loadFont } from './font'

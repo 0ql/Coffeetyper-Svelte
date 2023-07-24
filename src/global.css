@@ -1,0 +1,15 @@
+html,
+body {
+	margin: 0;
+	height: 100%;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.main {
+	z-index: 1;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+}

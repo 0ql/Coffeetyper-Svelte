@@ -11,23 +11,17 @@
 		"cy:run": "cypress run",
 		"test": "start-server-and-test serve http://localhost:4173 cy:run"
 	},
-	"lint-staged": {
-		"**/*": "prettier --write --ignore-unknown"
-	},
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "^2.4.3",
 		"@tsconfig/svelte": "^5.0.0",
-		"@windicss/plugin-animations": "^1.0.9",
-		"@windicss/plugin-scrollbar": "^1.2.3",
-		"postcss": "^8.4.27",
-		"postcss-load-config": "^4.0.1",
-		"postcss-windicss": "^1.0.0",
+		"@unocss/extractor-svelte": "^0.53.6",
 		"start-server-and-test": "^2.0.0",
 		"svelte": "^4.1.1",
 		"svelte-check": "^3.4.6",
-		"svelte-preprocess": "^5.0.4",
 		"tslib": "^2.6.0",
 		"typescript": "^5.1.6",
-		"vite": "^4.4.6"
+		"unocss": "^0.53.6",
+		"unocss-preset-scrollbar": "^0.2.1",
+		"vite": "^4.4.7"
 	}
 }

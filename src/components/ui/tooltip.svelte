@@ -13,6 +13,7 @@
 		</div>
 	{/if}
 	<div
+		role="tooltip"
 		on:mouseenter={() => (hovering = true)}
 		on:mouseleave={() => (hovering = false)}>
 		<slot />

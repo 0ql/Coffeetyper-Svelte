@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
-	import { sendNotification } from './ts/notifications'
-	const el = document.getElementById('box')
-	if (el) el.innerHTML = ''
+	import { onMount } from "svelte";
+	import { sendNotification } from "./ts/notifications";
+	const el = document.getElementById("box");
+	if (el) el.innerHTML = "";
 
-	let map: Record<string, { letter: string; x: number; y: number }[]> = {}
+	let map: Record<string, { letter: string; x: number; y: number }[]> = {};
 
 	const randomizer = () => {
-		let str: string = (Math.random() + 1).toString(36).substring(7)
+		let str: string = (Math.random() + 1).toString(36).substring(7);
 
 		for (let char of str) {
 			if (!map[char])
@@ -17,17 +17,17 @@
 						y: 0,
 						letter: char,
 					},
-				]
+				];
 			else
 				map[char].push({
 					x: Math.random() * window.innerWidth,
 					y: 0,
 					letter: char,
-				})
+				});
 		}
-	}
+	};
 
-	let i1, i2
+	let i1, i2;
 
 	onMount(() => {
 		i1 = setInterval(() => {
@@ -35,26 +35,26 @@
 				for (let char of map[key]) {
 					if (char.y > window.innerHeight) {
 						sendNotification({
-							type: 'info',
-							content: 'Game Over',
-						})
-						clearInterval(i1)
-						clearInterval(i2)
+							type: "info",
+							content: "Game Over",
+						});
+						clearInterval(i1);
+						clearInterval(i2);
 					}
-					char.y += 2
+					char.y += 2;
 				}
 			}
-			map = map
-		}, 50)
+			map = map;
+		}, 50);
 		i2 = setInterval(() => {
-			randomizer()
-		}, 3000)
-		window.addEventListener('keydown', (e) => {
+			randomizer();
+		}, 3000);
+		window.addEventListener("keydown", (e) => {
 			if (map[e.key]) {
-				map[e.key].shift()
+				map[e.key].shift();
 			}
-		})
-	})
+		});
+	});
 </script>
 
 <!--
@@ -76,7 +76,8 @@
 		{#each map[key] as letter}
 			<div
 				class="p-2 bg-[var(--sub-color)] rounded-lg absolute"
-				style="top: {letter.y}px; left: {letter.x}px;">
+				style="top: {letter.y}px; left: {letter.x}px;"
+			>
 				{letter.letter}
 			</div>
 		{/each}

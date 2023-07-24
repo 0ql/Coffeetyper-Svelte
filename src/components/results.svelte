@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { runState, settings } from '../store'
+	import { runState, settings } from "../store";
 </script>
 
 <div
 	class="w-full h-full flex items-center justify-center transition-opacity duration-400 {$settings.opened ||
 	$settings.cosmetics.theme.opened
 		? ' opacity-30'
-		: ''}">
+		: ''}"
+>
 	<div style="width: {$settings.cosmetics.textBox.width};">
 		<div class="flex gap-5">
 			<div>

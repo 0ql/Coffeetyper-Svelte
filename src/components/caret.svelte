@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { settings } from '../store'
-	import { send, receive } from './ts/textbox'
+	import { settings } from "../store";
+	import { send, receive } from "./ts/textbox";
 </script>
 
 <div
@@ -15,4 +15,5 @@
 	class="caret bg-white {$settings.cosmetics.textBox.caret.rounded
 		? 'rounded-full'
 		: ''} "
-	id="caret" />
+	id="caret"
+/>
