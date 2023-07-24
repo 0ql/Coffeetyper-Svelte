@@ -1,6 +1,6 @@
 import { get } from 'svelte/store'
-import { Letters, runState, settings, textArray } from '../../store'
-import type { TextArr, RunState, Word } from '../../store'
+import { runState, settings, textArray } from '../../store'
+import type { TextArr, RunState, Word, Letters } from '../../store'
 import { remToPx } from '../../lib/util'
 import { createText } from './words'
 import { randomizeSettings } from './settings'

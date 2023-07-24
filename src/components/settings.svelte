@@ -11,7 +11,7 @@
 		loadTextFileList,
 		randomizeSettings,
 		saveCosmetics,
-		Wordlists,
+		type Wordlists,
 	} from './ts/settings'
 	import { sendNotification } from './ts/notifications'
 	import Tooltip from './ui/tooltip.svelte'

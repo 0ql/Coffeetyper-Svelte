@@ -1,9 +1,0 @@
-.git
-node_modules
-dist
-package-lock.json
-TODO.md
-.prettierrc.toml
-LICENSE.md
-README.md
-public
