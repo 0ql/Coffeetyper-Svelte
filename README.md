@@ -39,10 +39,6 @@
 
 - All settings apply in realtime; no need to reload
 
-### Join the community
-
-[Discord](https://discord.gg/DEyH5FggQR)
-
 ### Usage
 
 To open the Settings move your mouse to the left of the screen.

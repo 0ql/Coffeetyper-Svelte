@@ -93,12 +93,6 @@
 						window.open('https://github.com/0ql/Coffeetyper', '_blank')}>
 					Github
 				</div>
-				<div
-					class="text-xs mt-2 cursor-pointer"
-					on:click={() =>
-						window.open('https://discord.gg/DEyH5FggQR', '_blank')}>
-					Discord
-				</div>
 
 				<div class="mt-5 col-span-4">Font Family</div>
 
