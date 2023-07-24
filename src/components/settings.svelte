@@ -91,7 +91,7 @@
 					Settings
 					<a
 						class="text-xs text-current"
-						href="https://github.com/0ql/Coffeetyper"
+						href="https://github.com/0ql/Coffeetyper-Svelte"
 						target="_blank"
 					>
 						Github
