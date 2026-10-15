@@ -1,76 +1,89 @@
-<p align="center" style="margin-top: 100px"><br>
-  <img src="https://raw.githubusercontent.com/0ql/Coffeetyper-Svelte/master/public/static/icon.svg" width="22%"/>
-  <br>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/0ql/Coffeetyper-Svelte/master/public/static/icon.svg" width="140" alt="Coffeetyper logo" />
 </p>
 
-# Coffeetyper
+<h1 align="center">Coffeetyper</h1>
 
-### What is Coffeetyper?
+<p align="center">
+  A minimalist, lightweight and ultra customizable typing test, inspired by <a href="https://monkeytype.com">Monkeytype</a>.
+</p>
 
-[Coffeetyper](https://coffeetyper.com) is a minimalistic and lightweight typingtest inspired by [Monkeytype](https://monkeytype.com).
+<p align="center">
+  <a href="https://coffeetyper.com"><strong>coffeetyper.com</strong></a>
+  ·
+  <a href="https://github.com/0ql/Coffeetyper-Svelte/issues">Report a bug</a>
+  ·
+  <a href="LICENSE.md">GPL-3.0</a>
+</p>
 
-### Features
+<p align="center">
+  <img src="https://i.imgur.com/db2T4DA.png" alt="Coffeetyper typing test" width="80%" />
+</p>
 
-- ⚡ Super Fast loading time ⚡
+## Features
 
-- Full offline support
+- ⚡ **Fast**: a tiny bundle that loads instantly
+- 🎨 **Themes**: switch color schemes in real time
+- 🔤 **Any font**: pick from every font on [Google Fonts](https://fonts.google.com)
+- 🛠️ **Customize everything**: textbox width, letter spacing, line height, caret style, background image and more
+- 💾 **Cosmetic presets**: save, switch between, import and export your looks as JSON
+- 🎲 **Randomize**: generate a random look (with very interesting results)
+- ⌨️ **Keybindings**: drive everything from the keyboard
+- 🔄 **Live settings**: every change applies instantly and is saved in local storage
 
-- Progressive Web App
+## Usage
 
-- Highly customizable
-  
-  - Customize all aspects of the textbox like width, letter spacing, line height, caret width...
-  
-  - Realtime color scheme switching
-  
-  - Add a background image
-  
-  - Pick between ALL fonts available on [Google Fonts](https://fonts.google.com)
+Move your mouse to the **left edge** of the screen to open the settings, and to the **right edge** to open the theme switcher.
 
-- Settings get saved to local storage
+<p align="center">
+  <img src="https://i.imgur.com/PpnKinI.png" alt="Settings panel" width="45%" />
+  &nbsp;
+  <img src="https://i.imgur.com/CVHuT6F.png" alt="Theme switcher" width="45%" />
+</p>
 
-- Save and switch between instances of your cosmetics in realtime
+### Keybindings
 
-- Export and import Cosmetics (as JSON)
+Press the leader key, then a command key. Every binding can be changed in the settings.
 
-- Keybindings
+| Shortcut  | Action                 |
+| --------- | ---------------------- |
+| `Tab` `r` | Restart the test       |
+| `Tab` `s` | Toggle settings        |
+| `Tab` `t` | Toggle theme switcher  |
+| `Tab` `q` | Randomize the look     |
 
-- Randomize the look of Coffeetyper (Produces very interesting results!)
+### How WPM is calculated
 
-- All settings apply in realtime; no need to reload
+WPM counts the correctly typed characters per minute and divides by 5, the average length of an English word. SPM (symbols per minute) is the same count without the division.
 
-### Usage
+## Gallery
 
-To open the Settings move your mouse to the left of the screen.
+<p align="center">
+  <img src="https://i.imgur.com/az53ftv.png" alt="Customized Coffeetyper" width="45%" />
+  &nbsp;
+  <img src="https://i.imgur.com/JvtXpVq.png" alt="Customized Coffeetyper" width="45%" />
+</p>
 
-![](https://i.imgur.com/PpnKinI.png) 
+## Development
 
-To switch the theme move your mouse to the right of the screen.
+Built with [Svelte 5](https://svelte.dev), TypeScript, [Vite](https://vite.dev) and [UnoCSS](https://unocss.dev).
 
-![](https://i.imgur.com/CVHuT6F.png)
+```sh
+pnpm install
+pnpm dev      # dev server on http://localhost:3000
+pnpm build    # production build in dist/
+pnpm serve    # preview the production build
+pnpm check    # type-check
+```
 
-![](https://i.imgur.com/db2T4DA.png)
+## Contributing
 
-![](https://i.imgur.com/az53ftv.png)
+Coffeetyper isn't as feature-rich as Monkeytype yet, but it covers the essentials of a typing test. Pull requests are always welcome.
 
-![](https://i.imgur.com/JvtXpVq.png)
+## Credits
 
-### Calculation of WPM/SPM
+Color schemes are from [Monkeytype](https://github.com/monkeytypegame/monkeytype).
 
-The WPM are calculated by taking the amount of correctly written symbols per minute and dividing them by 5 (the average length of an english word).
+## License
 
-### Stack
-
-Coffeetyper is written in [Svelte](https://svelte.dev) with Typescript and uses Windicss in conjuction with Postcss. 
-
-### Should you use Coffeetyper?
-
-It still lacks some features and isn't so feature rich as Monkeytype. But it provides the most important functions and statistics of a typing test and is definitely useable.
-
-### Color Schemes
-
-Credit for the color schemes goes to [Monkeytype](https://github.com/Miodec/monkeytype).
-
-### Contribute
-
-PRs are always appreciated.
+[GPL-3.0](LICENSE.md)
