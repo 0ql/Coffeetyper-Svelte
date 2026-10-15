@@ -2,7 +2,6 @@ import { refreshCosmetics, settings } from '../../store'
 import { get } from 'svelte/store'
 import { getThemeList } from '../../theme'
 import { getFromLocalStorage, saveToLocalStorage } from '../../lib/util'
-import { cacheCssFileAndFonts } from '../../lib/cache'
 
 export type Wordlists = {
 	file: string
@@ -65,10 +64,4 @@ export const saveCosmetics = (name: string) => {
 	c[name] = get(settings).cosmetics
 
 	saveToLocalStorage('savedCosmetics', c)
-
-	caches.open('main').then((cache) => {
-		cache.add(`./themes/${get(settings).cosmetics.theme.name}.css`)
-	})
-
-	cacheCssFileAndFonts(get(settings).cosmetics.family)
 }

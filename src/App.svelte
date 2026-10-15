@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from "svelte";
 	import { get } from "svelte/store";
 	import { fade } from "svelte/transition";
 	import ChangeTheme from "./components/changeTheme.svelte";
@@ -8,7 +7,6 @@
 	import Textbox from "./components/textbox.svelte";
 	import { refreshCosmetics, runState, settings } from "./store";
 	import { remToPx } from "./lib/util";
-	import { checkCacheAgeAndRenew } from "./lib/cache";
 	import Results from "./components/results.svelte";
 	import Downfall from "./components/downfall.svelte";
 
@@ -29,15 +27,11 @@
 	};
 
 	refreshCosmetics();
-
-	onMount(() => {
-		checkCacheAgeAndRenew();
-	});
 </script>
 
 <main
 	class="h-full text-secondary"
-	on:mousemove={mouseMoved}
+	onmousemove={mouseMoved}
 	style="background-image: url({$settings.cosmetics.background
 		.bgImg}); background: center center no-repeat; background-size: cover; z-index: -5;"
 >

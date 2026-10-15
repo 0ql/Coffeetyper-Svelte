@@ -3,8 +3,12 @@
 	import type { Word } from "../store";
 	import { letterHighlighting } from "./ts/textbox";
 	import Caret from "./caret.svelte";
-	export let word: Word;
-	export let caret: boolean = true;
+	interface Props {
+		word: Word;
+		caret?: boolean;
+	}
+
+	let { word, caret = true }: Props = $props();
 </script>
 
 <div
@@ -25,7 +29,7 @@
 			class="letter {letterObj.correct ? 'correct' : ''}"
 		>
 			{#if letterObj.letter === " "}
-				<div style="width: {$settings.cosmetics.textBox.spaceWidth};" />
+				<div style="width: {$settings.cosmetics.textBox.spaceWidth};"></div>
 			{:else if word.redHighlight && $incorrectLettersMapWritable.has(letterObj.letter)}
 				<div
 					class={$settings.highlighting.wrong ? "bg-red-400 bg-opacity-8" : ""}

@@ -2,6 +2,7 @@ import { get } from 'svelte/store'
 import { runState, settings, textArray } from '../../store'
 import type { TextArr, RunState, Word, Letters } from '../../store'
 import { remToPx } from '../../lib/util'
+import { reactive } from '../../lib/reactive.svelte'
 import { createText } from './words'
 import { randomizeSettings } from './settings'
 import { crossfade } from 'svelte/transition'
@@ -340,7 +341,7 @@ export const removeEventListener = () => {
 const newText = async () => {
 	let txt = await createText()
 	textArray.set(
-		txt.split(' ').map((word: string, i: number): Word => {
+		reactive(txt.split(' ').map((word: string, i: number): Word => {
 			const letters: Letters = word.split('').map((letter, ii: number) => {
 				return {
 					letter: letter,
@@ -364,7 +365,7 @@ const newText = async () => {
 				redHighlight: null,
 				letters: letters,
 			}
-		})
+		}))
 	)
 }
 

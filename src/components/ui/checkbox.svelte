@@ -1,12 +1,8 @@
 <script lang="ts">
-	export let checked: boolean;
+	let { checked = $bindable(), class: className = '' }: { checked: boolean; class?: string } = $props()
 </script>
 
-<input
-	type="checkbox"
-	class="{$$props.class}"
-	bind:checked
-/>
+<input type="checkbox" class={className} bind:checked />
 
 <style>
 	input[type="checkbox"] {

@@ -16,15 +16,14 @@
 	import { sendNotification } from "./ts/notifications";
 	import Tooltip from "./ui/tooltip.svelte";
 	import { resetRun } from "./ts/textbox";
-	import { renewCache } from "../lib/cache";
 
-	let fonts: string[];
-	let newName: string;
+	let fonts: string[] = $state();
+	let newName: string = $state();
 	(async () => {
 		fonts = await getFonts();
 	})();
 
-	let savedCosmetics: any = {};
+	let savedCosmetics: any = $state({});
 	const getSavedCosmetics = () => {
 		let c = getFromLocalStorage("savedCosmetics");
 		if (c === null) c = {};
@@ -57,7 +56,7 @@
 		});
 	};
 
-	let imported = "";
+	let imported = $state("");
 	const importCosmetics = () => {
 		const data = JSON.parse(imported);
 		$settings.cosmetics = fixBwithA($settings.cosmetics, data);
@@ -71,8 +70,8 @@
 
 	getSavedCosmetics();
 
-	let fontsFocus = false;
-	let wordlists: Wordlists = [];
+	let fontsFocus = $state(false);
+	let wordlists: Wordlists = $state([]);
 
 	(async () => {
 		wordlists = await loadTextFileList();
@@ -103,8 +102,8 @@
 				<Select
 					class="col-span-4 w-full"
 					bind:value={$settings.cosmetics.family}
-					on:change={refreshCosmetics}
-					on:mouseenter={() => {
+					onchange={refreshCosmetics}
+					onmouseenter={() => {
 						fontsFocus = true;
 					}}
 				>
@@ -146,7 +145,7 @@
 						<div class="text-xs">Mode</div>
 						<Select
 							class="w-full mt-2"
-							on:change={resetRun}
+							onchange={resetRun}
 							bind:value={$settings.cosmetics.textBox.mode}
 						>
 							<option value="classic">Classic</option>
@@ -197,7 +196,7 @@
 						bind:value={$settings.cosmetics.textBox.spaceWidth}
 					/>
 				</div>
-				<div class="col-span-1" />
+				<div class="col-span-1"></div>
 
 				<h2 class="text-base m-0 mt-3 font-normal col-span-4">
 					Text Generation
@@ -312,10 +311,10 @@
 
 				<h3 class="col-span-full text-base font-normal m-0 mt-3">Randomize Settings</h3>
 
-				<Button class="col-span-2" on:click={randomizeSettings}
+				<Button class="col-span-2" onclick={randomizeSettings}
 					>Randomize</Button
 				>
-				<Button class="col-span-2" on:click={resetToDefault}
+				<Button class="col-span-2" onclick={resetToDefault}
 					>Reset to Default</Button
 				>
 
@@ -350,7 +349,7 @@
 					bind:value={newName}
 				/>
 				<Button
-					on:click={() => {
+					onclick={() => {
 						saveCosmetics(newName);
 						getSavedCosmetics();
 					}}>Save</Button
@@ -366,7 +365,7 @@
 					class="col-span-3 w-full"
 					bind:value={imported}
 				/>
-				<Button on:click={importCosmetics}>Load</Button>
+				<Button onclick={importCosmetics}>Load</Button>
 
 				<h3 class="col-span-full text-base font-normal m-0 mt-3">
 					Saved Cosmetics
@@ -374,11 +373,11 @@
 
 				{#each Object.keys(savedCosmetics) as name}
 					<div class="col-span-4 text-sm">{name}</div>
-					<Button on:click={() => changeCosmetics(name)}>Load</Button>
-					<Button class="col-span-2" on:click={() => exportCosmetics(name)}
+					<Button onclick={() => changeCosmetics(name)}>Load</Button>
+					<Button class="col-span-2" onclick={() => exportCosmetics(name)}
 						>Copy to clipboard</Button
 					>
-					<Button on:click={() => deleteSetting(name)}>Delete</Button>
+					<Button onclick={() => deleteSetting(name)}>Delete</Button>
 				{/each}
 				{#if Object.keys(savedCosmetics).length === 0}
 					<div class="text-sm col-span-4">
@@ -441,8 +440,6 @@
 					<Checkbox bind:checked={$settings.highlighting.words} />
 					<div>Highlight active word</div>
 				</div>
-
-				<Button class="col-span-2" on:click={renewCache}>Refresh Cache</Button>
 			</div>
 		</div>
 	</div>

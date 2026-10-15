@@ -2,7 +2,6 @@ import { get, writable } from 'svelte/store'
 import type { Writable } from 'svelte/store'
 import { loadFont } from './font'
 import { loadTheme } from './theme'
-import { cacheCssFileAndFonts } from './lib/cache'
 
 export const cleanLocalstorage = () => {
 	localStorage.removeItem('1kfile')
@@ -32,7 +31,6 @@ const loadSettingsFormLocalStorage = (): Writable<Settings> => {
 
 		return writable(settings)
 	} else {
-		cacheCssFileAndFonts(template.cosmetics.family)
 		return writable(template)
 	}
 }

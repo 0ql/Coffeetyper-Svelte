@@ -3,7 +3,7 @@
 	import { fade, fly } from "svelte/transition";
 	import { settings } from "../store";
 
-	let list: any[] = [];
+	let list: any[] = $state([]);
 
 	(async () => {
 		list = await getThemeList();
@@ -26,7 +26,7 @@
 		>
 			{#each list as th}
 				<button
-					on:click={() => changeTheme(th.name)}
+					onclick={() => changeTheme(th.name)}
 					class="border-none rounded-lg p-3 cursor-pointer duration-150 transform hover:translate-x-[-0.2rem] {th.name ===
 					$settings.cosmetics.theme.name
 						? 'border-solid-3'

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { remToPx } from "../lib/util";
-	import { onMount } from "svelte/internal";
+	import { onMount } from "svelte";
 	import { runState, settings, textArray } from "../store";
 	import { startRun } from "./ts/textbox";
 	import Word from "./word.svelte";
@@ -9,9 +9,9 @@
 		startRun();
 	});
 
-	$: topMargin =
-		remToPx(parseFloat($settings.cosmetics.textBox.lineHeight)) *
-		(parseInt($settings.cosmetics.textBox.lines) / 2);
+	let topMargin =
+		$derived(remToPx(parseFloat($settings.cosmetics.textBox.lineHeight)) *
+		(parseInt($settings.cosmetics.textBox.lines) / 2));
 </script>
 
 <div

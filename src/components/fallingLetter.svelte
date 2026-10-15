@@ -1,18 +1,27 @@
 <script lang="ts">
-	export let letter: string;
-	export let amount: number;
+	import { untrack } from 'svelte';
 
-	let q = [];
-	let lastAmount: number = 0;
-
-	$: {
-		if (amount < lastAmount) {
-			lastAmount = amount;
-			q.pop();
-		} else if (amount > lastAmount) {
-			q.push(letter);
-		}
+	interface Props {
+		letter: string;
+		amount: number;
 	}
+
+	let { letter, amount }: Props = $props();
+
+	let q: string[] = $state([]);
+	let lastAmount = 0;
+
+	$effect.pre(() => {
+		const current = amount;
+		untrack(() => {
+			if (current < lastAmount) {
+				lastAmount = current;
+				q.pop();
+			} else if (current > lastAmount) {
+				q.push(letter);
+			}
+		});
+	});
 </script>
 
 <div class="block">

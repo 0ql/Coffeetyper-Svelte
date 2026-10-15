@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { settings } from '../../store'
-	export let hoverText: string
+	interface Props {
+		hoverText: string;
+		children?: import('svelte').Snippet;
+	}
 
-	let hovering = false
+	let { hoverText, children }: Props = $props();
+
+	let hovering = $state(false)
 </script>
 
 <div class="relative">
@@ -14,8 +19,8 @@
 	{/if}
 	<div
 		role="tooltip"
-		on:mouseenter={() => (hovering = true)}
-		on:mouseleave={() => (hovering = false)}>
-		<slot />
+		onmouseenter={() => (hovering = true)}
+		onmouseleave={() => (hovering = false)}>
+		{@render children?.()}
 	</div>
 </div>

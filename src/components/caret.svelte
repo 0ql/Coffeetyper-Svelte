@@ -16,4 +16,4 @@
 		? 'rounded-full'
 		: ''} "
 	id="caret"
-/>
+></div>

@@ -4,7 +4,7 @@
 	const el = document.getElementById("box");
 	if (el) el.innerHTML = "";
 
-	let map: Record<string, { letter: string; x: number; y: number }[]> = {};
+	let map: Record<string, { letter: string; x: number; y: number }[]> = $state({});
 
 	const randomizer = () => {
 		let str: string = (Math.random() + 1).toString(36).substring(7);

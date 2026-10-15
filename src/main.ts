@@ -1,52 +1,14 @@
 import 'uno.css'
 import './global.css'
+import { mount } from 'svelte'
 import App from './App.svelte'
-import { sendNotification } from './components/ts/notifications'
-import { loadFont } from './font'
-import { template } from './store'
-import { loadTheme } from './theme'
 
-if ('serviceWorker' in navigator) {
-	navigator.serviceWorker
-		.register('./sw.js', { scope: './' })
-		.then((reg) => {
-			// registration worked
-			console.log('Registration of Serviceworker succeeded.')
+// Clean up the service worker and cache left behind by older versions of the app.
+navigator.serviceWorker?.getRegistrations().then((regs) => regs.forEach((reg) => reg.unregister()))
+window.caches?.delete('main')
+localStorage.removeItem('cacheAge')
 
-			reg.update()
-		})
-		.catch((error) => {
-			// registration failed
-			console.log('Registration of Serviceworker failed with ' + error)
-		})
-
-	navigator.serviceWorker.addEventListener('message', (event) => {
-		switch (event.data.type) {
-			case 'FONT FETCH FAILED':
-				sendNotification({
-					type: 'warning',
-					content: `Coudn't fetch font. Defaulting to '${template.cosmetics.family}'...`,
-				})
-				loadFont(template.cosmetics.family)
-				break
-			case 'THEME FETCH FAILED':
-				sendNotification({
-					type: 'warning',
-					content: `Coudn't fetch theme. Defaulting to '${template.cosmetics.theme.name}'...`,
-				})
-				loadTheme(template.cosmetics.theme.name)
-				break
-			case 'FETCH FAILED':
-				sendNotification({
-					type: 'warning',
-					content: event.data.msg,
-				})
-				break
-		}
-	})
-}
-
-const app = new App({
+const app = mount(App, {
 	target: document.body,
 })
 
